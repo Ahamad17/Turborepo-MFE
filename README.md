@@ -111,6 +111,7 @@ const nextConfig = {
   },
 };
 module.exports = nextConfig;
+```
 
 ### 4. **Configured Output Directory for Centralized Builds**
 - Modified the configuration to output all built files into a common `dist` folder.
