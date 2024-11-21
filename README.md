@@ -79,3 +79,51 @@ Learn more about the power of Turborepo:
 - [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
 - [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
 - [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+
+# Setting Up a POC for Microfrontends Using Turborepo, Next.js, and Express.js  
+
+This document outlines the process followed to successfully set up and build Next.js microfrontend applications in parallel using Turborepo and serve them with an Express.js server. The setup focuses on simplicity and serves as a proof of concept (POC) for managing and deploying microfrontends efficiently.
+
+---
+
+## Steps Taken for the POC
+
+### 1. **Set Up Turborepo Workspace**
+- Followed the [Turborepo installation guide](https://turbo.build/repo/docs/getting-started/installation) to create a workspace for managing multiple apps.
+- Initialized the project with Turborepo to enable efficient parallel builds and centralized project management.
+
+### 2. **Created Simple Next.js Applications**
+- Developed two minimal Next.js applications within the Turborepo workspace.
+- These applications were intentionally kept simple to focus on demonstrating the setup and build process.
+
+### 3. **Built Next.js Apps as Static for Simplicity**
+- Configured each Next.js app to export static assets using the `output: 'export'` option in `next.config.js`.  
+- This approach avoids runtime dependencies, simplifies deployment, and ensures the POC focuses solely on the build and serve pipeline.
+
+Example `next.config.js` file:
+```javascript
+const nextConfig = {
+  reactStrictMode: true,
+  output: 'export', // Export as static files
+  distDir: '../../dist/my-app', // Specify output directory
+  images: {
+    unoptimized: true, // Disable image optimization for simplicity
+  },
+};
+module.exports = nextConfig;
+
+### 4. **Configured Output Directory for Centralized Builds**
+- Modified the configuration to output all built files into a common `dist` folder.
+- This structure simplifies serving multiple microfrontends from a single server.
+
+### 5. **Added Express Server to Serve Microfrontends**
+- Created an Express.js server to serve the static builds of the Next.js applications as microfrontends.  
+- Configured routes to serve each microfrontend separately, making them accessible at `/microfrontend1` and `/microfrontend2`.
+
+### 6. **Focus on Simplicity**
+- The POC prioritizes simplicity by:
+- Using static builds to eliminate runtime complexity.
+- Creating basic Next.js apps to focus on setting up Turborepo with parallel builds.
+- Serving microfrontends with a straightforward Express.js server to validate the concept.
+
+
