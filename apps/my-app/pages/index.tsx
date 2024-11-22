@@ -1,3 +1,5 @@
+import App from './_app';
+
 export default function Home() {
-  return <h1>Microfrontend 1</h1>;
+  return <App />
 }

@@ -126,5 +126,3 @@ module.exports = nextConfig;
 - Using static builds to eliminate runtime complexity.
 - Creating basic Next.js apps to focus on setting up Turborepo with parallel builds.
 - Serving microfrontends with a straightforward Express.js server to validate the concept.
-
-
