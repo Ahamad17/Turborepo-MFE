@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "start": "node server/index.js",
+    "start": "pnpm run start:prod",
+    "start:dev": "cross-env NODE_ENV=development node --max-http-header-size=80000 server/server.js",
+    "start:prod": "cross-env NODE_ENV=production node --max-http-header-size=80000 server/server.js",
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""

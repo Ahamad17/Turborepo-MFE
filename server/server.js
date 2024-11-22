@@ -3,6 +3,9 @@ const path = require('path');
 
 const app = express();
 
+const environment = process.env.NODE_ENV || 'development';
+console.log(`Running in ${environment} mode`);
+
 // Serve Microfrontend 1
 app.use(
   '/microfrontend1',
@@ -46,6 +49,13 @@ app.get('/', (req, res) => {
         h1 {
           color: #555;
         }
+        .environment {
+          padding: 10px;
+          margin: 20px 0;
+          border: 2px solid #333;
+          border-radius: 5px;
+          background-color: #fff;
+        }
         a {
           display: inline-block;
           margin: 10px;
@@ -62,6 +72,9 @@ app.get('/', (req, res) => {
     </head>
     <body>
       <h1>Welcome to the Microfrontends!</h1>
+      <div class="environment">
+        <p><strong>Current Environment:</strong> ${environment}</p>
+      </div>
       <p>Choose a microfrontend to view:</p>
       <div>
         <a href="/microfrontend1">Microfrontend 1</a>
