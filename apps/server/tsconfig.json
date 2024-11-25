@@ -11,7 +11,10 @@
             "@/*": [
                 "*"
             ]
-        }
+        },
+        "noEmit": false,
+        "declaration": true,
+        "emitDeclarationOnly": false,
     },
     "include": [
         "src/**/*"

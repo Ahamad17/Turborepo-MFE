@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   output: 'standalone',
-  distDir: '../../dist/apps/overview',
+  distDir: '../../dist/apps/overview/.next',
 };
 
 export default nextConfig;

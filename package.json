@@ -2,6 +2,8 @@
   "name": "turborepo-mfe",
   "private": true,
   "scripts": {
+    "start:prod": "npm run build && cross-env NODE_ENV=production npm run start -w server --max-http-header-size=80000",
+    "start:dev": "cross-env NODE_OPTIONS='--inspect' NODE_ENV=local npm run dev -w server --max-http-header-size=80000",
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
