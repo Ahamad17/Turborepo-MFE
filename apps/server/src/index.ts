@@ -9,7 +9,7 @@ const isLocal = process.env.NODE_ENV !== 'production';
 if (isLocal) {
   dotenv.config({ path: path.join(__dirname, '../.env.local') });
 }
-
+console.log('isLocal:', isLocal);
 const overviewApp = next({
   dev: isLocal,
   dir: path.join(__dirname, '../../overview'),
