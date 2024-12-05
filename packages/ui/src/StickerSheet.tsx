@@ -326,7 +326,7 @@ const SettingRow: React.FC<{ label: string; paymentSettings: PaymentSettingStatu
     {paymentSettings.status === "on" ? (
         <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
       ) : (
-        <CancelIcon color="error" sx={{ fontSize: 18 }} />
+        <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
       )}
       <Typography variant="body1">{label}</Typography>
     </Box>
