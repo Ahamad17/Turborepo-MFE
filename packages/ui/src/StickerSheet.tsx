@@ -11,7 +11,8 @@ import {
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import ErrorIcon from '@mui/icons-material/Error';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 /**
  * Type for Alert.
@@ -146,6 +147,15 @@ const StyledLink = styled(Link)(({ theme }) => ({
   },
 }));
 
+const ActionLink: React.FC<{ onClick?: () => void; ariaLabel: string; children: React.ReactNode }> = ({ onClick, ariaLabel, children }) => (
+  <StyledLink href="#" onClick={(e) => {
+    e.preventDefault();
+    onClick?.();
+  }} aria-label={ariaLabel}>
+    {children}
+  </StyledLink>
+);
+
 /**
  * Styled container for payment settings, such as autopay and paperless billing.
  */
@@ -194,7 +204,7 @@ const ActionButton = styled(Button)(({ theme }) => ({
 const AlertMessage: React.FC<{ alert: AlertProps; isMobile: boolean }> = ({ alert, isMobile }) => (
   <Alert type={alert.type}>
     {alert.type === "success" && <CheckCircleIcon color="success" />}
-    {alert.type === "error" && <ErrorOutlineIcon />}
+    {alert.type === "error" && <ErrorIcon />}
     <Typography variant={isMobile ? "body2" : "body1"}>{alert.message}</Typography>
   </Alert>
 );
@@ -229,12 +239,9 @@ const BalanceInfo: React.FC<{
       <Typography variant={isMobile ? "h5" : "h3"}>
         {currency}{currentBalance.toFixed(2)}
       </Typography>
-      <StyledLink href="#" onClick={(e) => {
-        e.preventDefault();
-        onBillDetailsClick?.();
-      }}>
+      <ActionLink onClick={onBillDetailsClick} ariaLabel="View bill details">
         Bill details
-      </StyledLink>
+      </ActionLink>
     </Box>
 
     <Typography variant="body2" sx={{ mb: 2.5, fontSize: 16 }}>
@@ -293,7 +300,9 @@ const PaymentMethod: React.FC<{ lastFour: string; onEdit?: () => void }> = ({ la
       <CreditCardIcon />
       <Typography variant="body1">•••• •••• •••• {lastFour}</Typography>
     </Box>
-    <EditLink onClick={onEdit} />
+    <ActionLink onClick={onEdit} ariaLabel="Edit card details">
+      Edit
+    </ActionLink>
   </Box>
 );
 
@@ -307,21 +316,10 @@ const SettingRow: React.FC<{ label: string; onEdit?: () => void }> = ({ label, o
       <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
       <Typography variant="body1">{label}</Typography>
     </Box>
-    <EditLink onClick={onEdit} />
+    <ActionLink onClick={onEdit} ariaLabel={`Edit ${label.toLowerCase()} settings`}>
+      Edit
+    </ActionLink>
   </Box>
-);
-
-/**
- * EditLink Component.
- * Displays an edit link that triggers the provided onClick handler.
- */
-const EditLink: React.FC<{ onClick?: () => void }> = ({ onClick }) => (
-  <StyledLink href="#" onClick={(e) => {
-    e.preventDefault();
-    onClick?.();
-  }}>
-    Edit
-  </StyledLink>
 );
 
 /**
@@ -336,19 +334,16 @@ const TermsAndButtons: React.FC<{
   <>
     <Typography variant="body2" color="textSecondary">
       By selecting Pay Balance Now, I agree to the Payment Authorization{" "}
-      <Link href="#" onClick={(e) => {
-        e.preventDefault();
-        onTermsClick?.();
-      }}>
+      <ActionLink onClick={onTermsClick} ariaLabel="View terms and conditions">
         Terms & Conditions
-      </Link>
+      </ActionLink>
     </Typography>
 
-    <ActionButton variant="contained" color="primary" onClick={onPayBalanceClick}>
+    <ActionButton variant="contained" color="primary" onClick={onPayBalanceClick} aria-label="Pay balance now">
       Pay balance now
     </ActionButton>
 
-    <ActionButton variant="outlined" onClick={onMoreOptionsClick}>
+    <ActionButton variant="outlined" onClick={onMoreOptionsClick} aria-label="View more payment options">
       More payment options
     </ActionButton>
   </>
