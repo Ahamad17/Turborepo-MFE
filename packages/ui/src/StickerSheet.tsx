@@ -162,7 +162,7 @@ const PaySettings = styled(Box)(({ theme }) => ({
 /**
  * Divider section for visual separation of balance and payment settings.
  */
-const DiviverBox = styled(Box)(({ theme }) => ({
+const DividerBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   paddingTop: 0,
   paddingBottom: 0,
@@ -389,9 +389,9 @@ export const StickerSheet: React.FC<StickerSheetProps> = ({
         currency={currency}
       />
 
-      <DiviverBox>
+      <DividerBox>
         <PaymentDivider />
-      </DiviverBox>
+      </DividerBox>
 
       <PaymentSettings
         cardLastFour={cardLastFour}
