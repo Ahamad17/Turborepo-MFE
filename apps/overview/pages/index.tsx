@@ -27,8 +27,14 @@ export default function Page() {
     lastPaymentDate: 'September 12, 2024',
     cardLastFour: '5000',
     cardType: 'discover' as const,
-    isAutopayEnabled: true,
-    isPaperlessEnabled: true,
+    autopaySettings: {
+        enabled: true,
+        status: "on" as const,
+    },
+    paperlessSettings: {
+      enabled: true,
+      status: "off" as const,
+    },
     alert: {
       type: 'success' as const,
       message: 'Payment successful'
@@ -43,8 +49,14 @@ export default function Page() {
     lastPaymentDate: 'September 12, 2024',
     cardLastFour: '5000',
     cardType: 'discover' as const,
-    isAutopayEnabled: true,
-    isPaperlessEnabled: true,
+    autopaySettings: {
+      enabled: true,
+      status: "on" as const,
+  },
+  paperlessSettings: {
+    enabled: true,
+    status: "off" as const,
+  },
     alert: {
       type: 'error' as const,
       message: 'Payment failed! Please try again.'

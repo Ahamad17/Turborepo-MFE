@@ -41,6 +41,16 @@ type AlertProps = {
 };
 
 /**
+ * Payment setting status.
+ * - `enabled`: Whether the setting is enabled.
+ * - `status`: The current status of the setting.
+ */
+type PaymentSettingStatus = {
+  enabled: boolean;
+  status: "on" | "off";
+};
+
+/**
  * Theme configuration for the StickerSheet component.
  * - `borderRadius`: Border radius of the card.
  * - `maxWidth`: Maximum width of the card.
@@ -68,8 +78,8 @@ type StickerSheetBaseProps = {
   lastPaymentDate: string;
   cardLastFour: string;
   cardType: CardType;
-  isAutopayEnabled: boolean;
-  isPaperlessEnabled: boolean;
+  autopaySettings: PaymentSettingStatus;
+  paperlessSettings: PaymentSettingStatus;
   alert?: AlertProps;
   className?: string;
   theme?: StickerSheetTheme;
@@ -259,8 +269,8 @@ const BalanceInfo: React.FC<{
  */
 const PaymentSettings: React.FC<{
   cardLastFour: string;
-  isAutopayEnabled: boolean;
-  isPaperlessEnabled: boolean;
+  autopaySettings: PaymentSettingStatus;
+  paperlessSettings: PaymentSettingStatus;
   onEditCardClick?: () => void;
   onEditAutopayClick?: () => void;
   onEditPaperlessClick?: () => void;
@@ -269,8 +279,8 @@ const PaymentSettings: React.FC<{
   onMoreOptionsClick?: () => void;
 }> = ({
   cardLastFour,
-  isAutopayEnabled,
-  isPaperlessEnabled,
+  autopaySettings,
+  paperlessSettings,
   onEditCardClick,
   onEditAutopayClick,
   onEditPaperlessClick,
@@ -280,8 +290,8 @@ const PaymentSettings: React.FC<{
 }) => (
   <PaySettings>
     <PaymentMethod lastFour={cardLastFour} onEdit={onEditCardClick} />
-    {isAutopayEnabled && <SettingRow label="Autopay" onEdit={onEditAutopayClick} />}
-    {isPaperlessEnabled && <SettingRow label="Paperless" onEdit={onEditPaperlessClick} />}
+    {autopaySettings.enabled && <SettingRow label="Autopay" paymentSettings={autopaySettings} onEdit={onEditAutopayClick} />}
+    {paperlessSettings.enabled && <SettingRow label="Paperless" paymentSettings={paperlessSettings} onEdit={onEditPaperlessClick} />}
     <TermsAndButtons 
       onTermsClick={onTermsClick}
       onPayBalanceClick={onPayBalanceClick}
@@ -310,10 +320,14 @@ const PaymentMethod: React.FC<{ lastFour: string; onEdit?: () => void }> = ({ la
  * SettingRow Component.
  * Displays a setting label and an edit link.
  */
-const SettingRow: React.FC<{ label: string; onEdit?: () => void }> = ({ label, onEdit }) => (
+const SettingRow: React.FC<{ label: string; paymentSettings: PaymentSettingStatus; onEdit?: () => void }> = ({ label, paymentSettings, onEdit }) => (
   <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
+    {paymentSettings.status === "on" ? (
+        <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
+      ) : (
+        <CancelIcon color="error" sx={{ fontSize: 18 }} />
+      )}
       <Typography variant="body1">{label}</Typography>
     </Box>
     <ActionLink onClick={onEdit} ariaLabel={`Edit ${label.toLowerCase()} settings`}>
@@ -359,8 +373,8 @@ export const StickerSheet: React.FC<StickerSheetProps> = ({
   lastPaymentAmount,
   lastPaymentDate,
   cardLastFour,
-  isAutopayEnabled,
-  isPaperlessEnabled,
+  autopaySettings,
+  paperlessSettings,
   alert,
   className,
   theme: customTheme,
@@ -390,8 +404,8 @@ export const StickerSheet: React.FC<StickerSheetProps> = ({
 
       <PaymentSettings
         cardLastFour={cardLastFour}
-        isAutopayEnabled={isAutopayEnabled}
-        isPaperlessEnabled={isPaperlessEnabled}
+        autopaySettings={autopaySettings}
+        paperlessSettings={paperlessSettings}
         {...actions}
       />
     </BaseCard>
