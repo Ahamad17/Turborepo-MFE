@@ -31,33 +31,6 @@ type AlertType = "success" | "error";
 type CardType = "visa" | "mastercard" | "amex" | "discover";
 
 /**
- * Props for the alert box.
- * @property {AlertType} type - The type of the alert.
- * @property {string} message - The message to be displayed in the alert.
- */
-type AlertProps = {
-  type: AlertType;
-  message: string;
-};
-
-/**
- * Theme configuration for the StickerSheet component.
- * - `borderRadius`: Border radius of the card.
- * - `maxWidth`: Maximum width of the card.
- * - `backgroundColor`: Background color of the card.
- * - `alertColors`: Custom colors for alerts.
- */
-type StickerSheetTheme = {
-  borderRadius?: number;
-  maxWidth?: number;
-  backgroundColor?: string;
-  alertColors?: {
-    success: string;
-    error: string;
-  };
-};
-
-/**
  * Base props for the StickerSheet component.
  * Includes payment-related data and configuration flags.
  */
@@ -72,10 +45,20 @@ type StickerSheetBaseProps = {
   paperlessEligible?: boolean;
   autopayEnrolled?: boolean;
   paperlessEnrolled?: boolean;
-  alert?: AlertProps;
+  alertType?: AlertType;
+  alertMessage?: string;
   className?: string;
-  theme?: StickerSheetTheme;
+  borderRadius?: number;
+  maxWidth?: number;
+  backgroundColor?: string;
+  alertSuccessColor?: string;
+  alertErrorColor?: string;
   currency?: string;
+  makeAPayementCTA?: string
+  showMakeAPayment?: boolean,
+  showMorePaymentOptions?: boolean,
+  morePaymentOptionsCTA?: string,
+  showPaymentsOptions?: boolean
 };
 
 /**
@@ -100,11 +83,11 @@ type StickerSheetProps = StickerSheetBaseProps & StickerSheetActions;
  * Styled base card for StickerSheet.
  * Applies theme-based styling and allows for custom theming via props.
  */
-const BaseCard = styled(Card)<{ customTheme?: StickerSheetTheme }>(({ theme, customTheme }) => ({
+const BaseCard = styled(Card)<{ customTheme: { borderRadius: number; maxWidth: number; backgroundColor: string } }>(({ theme, customTheme }) => ({
   width: "100%",
-  maxWidth: customTheme?.maxWidth || "400px",
-  backgroundColor: customTheme?.backgroundColor || "#FFFFFF",
-  borderRadius: theme.spacing(customTheme?.borderRadius || 2),
+  maxWidth: customTheme?.maxWidth,
+  backgroundColor: customTheme?.backgroundColor,
+  borderRadius: theme.spacing(customTheme?.borderRadius),
   boxShadow: theme.shadows[1],
   margin: "0 auto",
 }));
@@ -116,8 +99,8 @@ const BaseCard = styled(Card)<{ customTheme?: StickerSheetTheme }>(({ theme, cus
 const Alert = styled(Box)<{ type: AlertType; customColors?: { success: string; error: string } }>(
   ({ theme, type, customColors }) => ({
     backgroundColor: type === "success" 
-      ? customColors?.success || "#E7F4F0" 
-      : customColors?.error || "#D23627",
+      ? customColors?.success
+      : customColors?.error,
     color: type === "success" ? "primary" : "#FFFFFF",
     padding: theme.spacing(2),
     display: "flex",
@@ -184,7 +167,7 @@ const DividerBox = styled(Box)(({ theme }) => ({
  * Divider styling for use in StickerSheet.
  */
 const PaymentDivider = styled(Divider)(({ theme }) => ({
-  height: 2,
+  height: 1,
   backgroundColor: theme.palette.divider,
 }));
 
@@ -203,11 +186,11 @@ const ActionButton = styled(Button)(({ theme }) => ({
  * AlertMessage Component.
  * Renders the alert box with an icon and message.
  */
-const AlertMessage: React.FC<{ alert: AlertProps; isMobile: boolean }> = ({ alert, isMobile }) => (
-  <Alert type={alert.type}>
-    {alert.type === "success" && <CheckCircleIcon color="success" />}
-    {alert.type === "error" && <ErrorIcon />}
-    <Typography variant={isMobile ? "body2" : "body1"}>{alert.message}</Typography>
+const AlertMessage: React.FC<{ alertType: AlertType; alertMessage: string; isMobile: boolean; alertSuccessColor: string; alertErrorColor: string }> = ({ alertType, alertMessage, isMobile, alertSuccessColor, alertErrorColor }) => (
+  alertType && alertMessage && <Alert type={alertType} customColors={{ success: alertSuccessColor, error: alertErrorColor }}>
+    {alertType === "success" && <CheckCircleIcon color="success" />}
+    {alertType === "error" && <ErrorIcon />}
+    <Typography variant={isMobile ? "body2" : "body1"}>{alertMessage}</Typography>
   </Alert>
 );
 
@@ -222,7 +205,7 @@ const BalanceInfo: React.FC<{
   lastPaymentReceivedDate: string;
   onBillDetailsClick?: () => void;
   isMobile: boolean;
-  currency?: string;
+  currency: string;
 }> = ({
   currentBalanceAmt,
   autopayScheduledDate,
@@ -230,7 +213,7 @@ const BalanceInfo: React.FC<{
   lastPaymentReceivedDate,
   onBillDetailsClick,
   isMobile,
-  currency = "$",
+  currency,
 }) => (
   <BalanceSection>
     <Typography variant="body2" color="textSecondary">
@@ -261,10 +244,15 @@ const BalanceInfo: React.FC<{
  */
 const PaymentSettings: React.FC<{
   cardNumber: string;
-  autopayEligible?: boolean;
-  paperlessEligible?: boolean;
-  autopayEnrolled?: boolean;
-  paperlessEnrolled?: boolean;
+  autopayEligible: boolean;
+  paperlessEligible: boolean;
+  autopayEnrolled: boolean;
+  paperlessEnrolled: boolean;
+  makeAPayementCTA: string
+  showMakeAPayment: boolean,
+  showMorePaymentOptions: boolean,
+  morePaymentOptionsCTA: string,
+  showPaymentsOptions: boolean
   onEditCardClick?: () => void;
   onEditAutopayClick?: () => void;
   onEditPaperlessClick?: () => void;
@@ -277,6 +265,11 @@ const PaymentSettings: React.FC<{
   paperlessEligible,
   autopayEnrolled,
   paperlessEnrolled,
+  makeAPayementCTA,
+  showMakeAPayment,
+  showMorePaymentOptions,
+  morePaymentOptionsCTA,
+  showPaymentsOptions,
   onEditCardClick,
   onEditAutopayClick,
   onEditPaperlessClick,
@@ -286,9 +279,14 @@ const PaymentSettings: React.FC<{
 }) => (
   <PaySettings>
     <PaymentMethod lastFour={cardNumber} onEdit={onEditCardClick} />
-    {autopayEligible && <SettingRow label="Autopay" status={!!autopayEnrolled} onEdit={onEditAutopayClick} />}
-    {paperlessEligible && <SettingRow label="Paperless" status={!!paperlessEnrolled} onEdit={onEditPaperlessClick} />}
-    <TermsAndButtons 
+    {autopayEligible && <SettingRow label="Autopay" status={autopayEnrolled} onEdit={onEditAutopayClick} />}
+    {paperlessEligible && <SettingRow label="Paperless" status={paperlessEnrolled} onEdit={onEditPaperlessClick} />}
+    <TermsAndButtons
+      makeAPayementCTA={makeAPayementCTA}
+      showMakeAPayment={showMakeAPayment}
+      showMorePaymentOptions={showMorePaymentOptions}
+      morePaymentOptionsCTA={morePaymentOptionsCTA}
+      showPaymentsOptions={showPaymentsOptions} 
       onTermsClick={onTermsClick}
       onPayBalanceClick={onPayBalanceClick}
       onMoreOptionsClick={onMoreOptionsClick}
@@ -337,11 +335,20 @@ const SettingRow: React.FC<{ label: string; status: boolean; onEdit?: () => void
  * Displays terms and conditions text and action buttons.
  */
 const TermsAndButtons: React.FC<{
+  makeAPayementCTA: string
+  showMakeAPayment: boolean,
+  showMorePaymentOptions: boolean,
+  morePaymentOptionsCTA: string,
+  showPaymentsOptions: boolean
   onTermsClick?: () => void;
   onPayBalanceClick?: () => void;
   onMoreOptionsClick?: () => void;
-}> = ({ onTermsClick, onPayBalanceClick, onMoreOptionsClick }) => (
-  <>
+}> = ({ makeAPayementCTA,
+  showMakeAPayment,
+  showMorePaymentOptions,
+  morePaymentOptionsCTA,
+  showPaymentsOptions, onTermsClick, onPayBalanceClick, onMoreOptionsClick }) => (
+  showPaymentsOptions && <>
     <Typography variant="body2" color="textSecondary">
       By selecting Pay Balance Now, I agree to the Payment Authorization{" "}
       <ActionLink onClick={onTermsClick} ariaLabel="View terms and conditions">
@@ -349,13 +356,13 @@ const TermsAndButtons: React.FC<{
       </ActionLink>
     </Typography>
 
-    <ActionButton variant="contained" color="primary" onClick={onPayBalanceClick} aria-label="Pay balance now">
-      Pay balance now
-    </ActionButton>
+    { showMakeAPayment && <ActionButton variant="contained" color="primary" onClick={onPayBalanceClick} aria-label="Pay balance now">
+      {makeAPayementCTA}
+    </ActionButton> }
 
-    <ActionButton variant="outlined" onClick={onMoreOptionsClick} aria-label="View more payment options">
-      More payment options
-    </ActionButton>
+    { showMorePaymentOptions && <ActionButton variant="outlined" onClick={onMoreOptionsClick} aria-label="View more payment options">
+      {morePaymentOptionsCTA}
+    </ActionButton> }
   </>
 );
 
@@ -369,22 +376,32 @@ export const StickerSheet = ({
   lastPaymentAmt,
   lastPaymentReceivedDate,
   cardNumber,
-  autopayEligible,
-  paperlessEligible,
-  autopayEnrolled,
-  paperlessEnrolled,
-  alert,
-  className,
-  theme: customTheme,
-  currency,
+  autopayEligible = false,
+  paperlessEligible = false,
+  autopayEnrolled = false,
+  paperlessEnrolled = false,
+  makeAPayementCTA = "Pay Balance Now",
+  showMakeAPayment = false,
+  showMorePaymentOptions = false,
+  morePaymentOptionsCTA = "More Payment Options",
+  showPaymentsOptions = false,
+  alertType = "success",
+  alertMessage = "",
+  className = "",
+  borderRadius = 3,
+  maxWidth = 375,
+  backgroundColor = "#FFFFFF",
+  alertSuccessColor = "#E7F4F0",
+  alertErrorColor = "#D23627",
+  currency = "$",
   ...actions
 }: StickerSheetProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
-    <BaseCard className={className} customTheme={customTheme}>
-      {alert && <AlertMessage alert={alert} isMobile={isMobile} />}
+    <BaseCard className={className} customTheme={{ borderRadius, maxWidth, backgroundColor }}>
+      {alertType && alertMessage && <AlertMessage alertType={alertType} alertMessage={alertMessage} isMobile={isMobile} alertSuccessColor={alertSuccessColor} alertErrorColor={alertErrorColor} />}
       
       <BalanceInfo
         currentBalanceAmt={currentBalanceAmt}
@@ -401,6 +418,11 @@ export const StickerSheet = ({
       </DividerBox>
 
       <PaymentSettings
+        makeAPayementCTA={makeAPayementCTA}
+        showMakeAPayment={showMakeAPayment}
+        showMorePaymentOptions={showMorePaymentOptions}
+        morePaymentOptionsCTA={morePaymentOptionsCTA}
+        showPaymentsOptions={showPaymentsOptions}
         cardNumber={cardNumber}
         autopayEligible={autopayEligible}
         paperlessEligible={paperlessEligible}
@@ -411,19 +433,3 @@ export const StickerSheet = ({
     </BaseCard>
   );
 };
-
-/**
- * useStickerSheetActions Hook.
- * Provides default implementations for StickerSheet action handlers.
- */
-export const useStickerSheetActions = (handlers?: Partial<StickerSheetActions>): StickerSheetActions => ({
-  onBillDetailsClick: () => handlers?.onBillDetailsClick?.(),
-  onEditCardClick: () => handlers?.onEditCardClick?.(),
-  onEditAutopayClick: () => handlers?.onEditAutopayClick?.(),
-  onEditPaperlessClick: () => handlers?.onEditPaperlessClick?.(),
-  onTermsClick: () => handlers?.onTermsClick?.(),
-  onPayBalanceClick: () => handlers?.onPayBalanceClick?.(),
-  onMoreOptionsClick: () => handlers?.onMoreOptionsClick?.()
-});
-
-export default StickerSheet;
