@@ -13,6 +13,7 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import ErrorIcon from '@mui/icons-material/Error';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { FaCcVisa, FaCcMastercard, FaCcAmex, FaCcDiscover, FaPaypal, FaUniversity } from 'react-icons/fa';
 
 /**
  * Type for Alert.
@@ -28,7 +29,7 @@ type AlertType = "success" | "error";
  * - `amex`
  * - `discover`
  */
-type CardType = "visa" | "mastercard" | "amex" | "discover";
+type CardType = 'visa' | 'mastercard' | 'amex' | 'americanexpress' | 'discover' | 'paypal' | 'bank';
 
 /**
  * Base props for the StickerSheet component.
@@ -244,6 +245,7 @@ const BalanceInfo: React.FC<{
  */
 const PaymentSettings: React.FC<{
   cardNumber: string;
+  cardType: CardType;
   autopayEligible: boolean;
   paperlessEligible: boolean;
   autopayEnrolled: boolean;
@@ -270,6 +272,7 @@ const PaymentSettings: React.FC<{
   showMorePaymentOptions,
   morePaymentOptionsCTA,
   showPaymentsOptions,
+  cardType,
   onEditCardClick,
   onEditAutopayClick,
   onEditPaperlessClick,
@@ -278,7 +281,7 @@ const PaymentSettings: React.FC<{
   onMoreOptionsClick,
 }) => (
   <PaySettings>
-    <PaymentMethod lastFour={cardNumber} onEdit={onEditCardClick} />
+    <PaymentMethod cardType={cardType} lastFour={cardNumber} onEdit={onEditCardClick} />
     {autopayEligible && <SettingRow label="Autopay" status={autopayEnrolled} onEdit={onEditAutopayClick} />}
     {paperlessEligible && <SettingRow label="Paperless" status={paperlessEnrolled} onEdit={onEditPaperlessClick} />}
     <TermsAndButtons
@@ -294,14 +297,38 @@ const PaymentSettings: React.FC<{
   </PaySettings>
 );
 
+const CardIcon: React.FC<{cardType: CardType, size: number}> = ({ cardType, size = 50 }) => {
+  const getIcon = () => {
+    switch (cardType) {
+      case 'visa':
+        return <FaCcVisa size={size} style={{ color: '#1a1f71' }} />;
+      case 'mastercard':
+        return <FaCcMastercard size={size} style={{ color: '#ff5f00' }} />;
+      case 'amex':
+      case 'americanexpress':
+        return <FaCcAmex size={size} style={{ color: '#2e77bc' }} />;
+      case 'discover':
+        return <FaCcDiscover size={size} style={{ color: '#ff6000' }} />;
+      case 'paypal':
+        return <FaPaypal size={size} style={{ color: '#003087' }} />;
+      case 'bank':
+        return <FaUniversity size={size} style={{ color: '#000' }} />;
+      default:
+        return <CreditCardIcon />;
+    }
+  };
+
+  return getIcon()
+};
+
 /**
  * PaymentMethod Component.
  * Displays the last four digits of the card and an edit link.
  */
-const PaymentMethod: React.FC<{ lastFour: string; onEdit?: () => void }> = ({ lastFour, onEdit }) => (
+const PaymentMethod: React.FC<{ lastFour: string; cardType: CardType, onEdit?: () => void }> = ({ lastFour, cardType, onEdit }) => (
   <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <CreditCardIcon />
+      <CardIcon cardType={cardType} size={30} />
       <Typography variant="body1">•••• •••• •••• {lastFour}</Typography>
     </Box>
     <ActionLink onClick={onEdit} ariaLabel="Edit card details">

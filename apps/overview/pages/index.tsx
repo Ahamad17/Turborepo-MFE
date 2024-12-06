@@ -9,7 +9,7 @@ export default function Page() {
         lastPaymentAmt={50.0}
         lastPaymentReceivedDate="September 12, 2024"
         cardNumber="5000"
-        cardType="discover"
+        cardType="visa"
         autopayEligible={true}
         paperlessEligible={true}
         autopayEnrolled={true}
