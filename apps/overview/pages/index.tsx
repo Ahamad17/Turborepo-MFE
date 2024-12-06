@@ -12,7 +12,7 @@ export default function Page() {
 
   const customTheme = {
     borderRadius: 3,
-    maxWidth: 450,
+    maxWidth: 375,
     backgroundColor: '#fafafa',
     alertColors: {
       success: '#e6ffe6',
@@ -21,20 +21,16 @@ export default function Page() {
   };
 
   const successCard = {
-    currentBalance: 89.99,
-    autopayDate: 'September 12, 2024',
-    lastPaymentAmount: 50.00,
-    lastPaymentDate: 'September 12, 2024',
-    cardLastFour: '5000',
+    currentBalanceAmt: 89.99,
+    autopayScheduledDate: 'September 12, 2024',
+    lastPaymentAmt: 50.00,
+    lastPaymentReceivedDate: 'September 12, 2024',
+    cardNumber: '5000',
     cardType: 'discover' as const,
-    autopaySettings: {
-        enabled: true,
-        status: "on" as const,
-    },
-    paperlessSettings: {
-      enabled: true,
-      status: "off" as const,
-    },
+    autopayEligible: true,
+    paperlessEligible: true,
+    autopayEnrolled: true,
+    paperlessEnrolled: false,
     alert: {
       type: 'success' as const,
       message: 'Payment successful'
@@ -43,20 +39,16 @@ export default function Page() {
   };
 
   const failureCard = {
-    currentBalance: 89.99,
-    autopayDate: 'September 12, 2024',
-    lastPaymentAmount: 50.00,
-    lastPaymentDate: 'September 12, 2024',
-    cardLastFour: '5000',
+    currentBalanceAmt: 89.99,
+    autopayScheduledDate: 'September 12, 2024',
+    lastPaymentAmt: 50.00,
+    lastPaymentReceivedDate: 'September 12, 2024',
+    cardNumber: '5000',
     cardType: 'discover' as const,
-    autopaySettings: {
-      enabled: true,
-      status: "on" as const,
-  },
-  paperlessSettings: {
-    enabled: true,
-    status: "off" as const,
-  },
+    autopayEligible: true,
+    paperlessEligible: true,
+    autopayEnrolled: true,
+    paperlessEnrolled: false,
     alert: {
       type: 'error' as const,
       message: 'Payment failed! Please try again.'

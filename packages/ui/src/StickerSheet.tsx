@@ -41,16 +41,6 @@ type AlertProps = {
 };
 
 /**
- * Payment setting status.
- * - `enabled`: Whether the setting is enabled.
- * - `status`: The current status of the setting.
- */
-type PaymentSettingStatus = {
-  enabled: boolean;
-  status: "on" | "off";
-};
-
-/**
  * Theme configuration for the StickerSheet component.
  * - `borderRadius`: Border radius of the card.
  * - `maxWidth`: Maximum width of the card.
@@ -72,18 +62,20 @@ type StickerSheetTheme = {
  * Includes payment-related data and configuration flags.
  */
 type StickerSheetBaseProps = {
-  currentBalance: number;
-  autopayDate: string;
-  lastPaymentAmount: number;
-  lastPaymentDate: string;
-  cardLastFour: string;
+  currentBalanceAmt: number;
+  autopayScheduledDate: string;
+  lastPaymentAmt: number;
+  lastPaymentReceivedDate: string;
+  cardNumber: string;
   cardType: CardType;
-  autopaySettings: PaymentSettingStatus;
-  paperlessSettings: PaymentSettingStatus;
+  autopayEligible?: boolean;
+  paperlessEligible?: boolean;
+  autopayEnrolled?: boolean;
+  paperlessEnrolled?: boolean;
   alert?: AlertProps;
   className?: string;
   theme?: StickerSheetTheme;
-  currency?: string; // New property for currency
+  currency?: string;
 };
 
 /**
@@ -224,18 +216,18 @@ const AlertMessage: React.FC<{ alert: AlertProps; isMobile: boolean }> = ({ aler
  * Displays the current balance, autopay date, and last payment information.
  */
 const BalanceInfo: React.FC<{
-  currentBalance: number;
-  autopayDate: string;
-  lastPaymentAmount: number;
-  lastPaymentDate: string;
+  currentBalanceAmt: number;
+  autopayScheduledDate: string;
+  lastPaymentAmt: number;
+  lastPaymentReceivedDate: string;
   onBillDetailsClick?: () => void;
   isMobile: boolean;
   currency?: string;
 }> = ({
-  currentBalance,
-  autopayDate,
-  lastPaymentAmount,
-  lastPaymentDate,
+  currentBalanceAmt,
+  autopayScheduledDate,
+  lastPaymentAmt,
+  lastPaymentReceivedDate,
   onBillDetailsClick,
   isMobile,
   currency = "$",
@@ -247,7 +239,7 @@ const BalanceInfo: React.FC<{
 
     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 0.5 }}>
       <Typography variant={isMobile ? "h5" : "h3"}>
-        {currency}{currentBalance.toFixed(2)}
+        {currency}{currentBalanceAmt.toFixed(2)}
       </Typography>
       <ActionLink onClick={onBillDetailsClick} ariaLabel="View bill details">
         Bill details
@@ -255,10 +247,10 @@ const BalanceInfo: React.FC<{
     </Box>
 
     <Typography variant="body2" sx={{ mb: 2.5, fontSize: 16 }}>
-      Autopay scheduled for {autopayDate}
+      Autopay scheduled for {autopayScheduledDate}
     </Typography>
     <Typography variant="body2" color="textSecondary">
-      Last payment of {currency}{lastPaymentAmount.toFixed(2)} was received on {lastPaymentDate}
+      Last payment of {currency}{lastPaymentAmt.toFixed(2)} was received on {lastPaymentReceivedDate}
     </Typography>
   </BalanceSection>
 );
@@ -268,9 +260,11 @@ const BalanceInfo: React.FC<{
  * Displays payment method, autopay, and paperless settings.
  */
 const PaymentSettings: React.FC<{
-  cardLastFour: string;
-  autopaySettings: PaymentSettingStatus;
-  paperlessSettings: PaymentSettingStatus;
+  cardNumber: string;
+  autopayEligible?: boolean;
+  paperlessEligible?: boolean;
+  autopayEnrolled?: boolean;
+  paperlessEnrolled?: boolean;
   onEditCardClick?: () => void;
   onEditAutopayClick?: () => void;
   onEditPaperlessClick?: () => void;
@@ -278,9 +272,11 @@ const PaymentSettings: React.FC<{
   onPayBalanceClick?: () => void;
   onMoreOptionsClick?: () => void;
 }> = ({
-  cardLastFour,
-  autopaySettings,
-  paperlessSettings,
+  cardNumber,
+  autopayEligible,
+  paperlessEligible,
+  autopayEnrolled,
+  paperlessEnrolled,
   onEditCardClick,
   onEditAutopayClick,
   onEditPaperlessClick,
@@ -289,9 +285,9 @@ const PaymentSettings: React.FC<{
   onMoreOptionsClick,
 }) => (
   <PaySettings>
-    <PaymentMethod lastFour={cardLastFour} onEdit={onEditCardClick} />
-    {autopaySettings.enabled && <SettingRow label="Autopay" paymentSettings={autopaySettings} onEdit={onEditAutopayClick} />}
-    {paperlessSettings.enabled && <SettingRow label="Paperless" paymentSettings={paperlessSettings} onEdit={onEditPaperlessClick} />}
+    <PaymentMethod lastFour={cardNumber} onEdit={onEditCardClick} />
+    {autopayEligible && <SettingRow label="Autopay" status={!!autopayEnrolled} onEdit={onEditAutopayClick} />}
+    {paperlessEligible && <SettingRow label="Paperless" status={!!paperlessEnrolled} onEdit={onEditPaperlessClick} />}
     <TermsAndButtons 
       onTermsClick={onTermsClick}
       onPayBalanceClick={onPayBalanceClick}
@@ -320,10 +316,10 @@ const PaymentMethod: React.FC<{ lastFour: string; onEdit?: () => void }> = ({ la
  * SettingRow Component.
  * Displays a setting label and an edit link.
  */
-const SettingRow: React.FC<{ label: string; paymentSettings: PaymentSettingStatus; onEdit?: () => void }> = ({ label, paymentSettings, onEdit }) => (
+const SettingRow: React.FC<{ label: string; status: boolean; onEdit?: () => void }> = ({ label, status, onEdit }) => (
   <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-    {paymentSettings.status === "on" ? (
+      {status ? (
         <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
       ) : (
         <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
@@ -367,20 +363,22 @@ const TermsAndButtons: React.FC<{
  * StickerSheet Component.
  * Main component that combines balance info, payment settings, and alerts.
  */
-export const StickerSheet: React.FC<StickerSheetProps> = ({
-  currentBalance,
-  autopayDate,
-  lastPaymentAmount,
-  lastPaymentDate,
-  cardLastFour,
-  autopaySettings,
-  paperlessSettings,
+export const StickerSheet = ({
+  currentBalanceAmt,
+  autopayScheduledDate,
+  lastPaymentAmt,
+  lastPaymentReceivedDate,
+  cardNumber,
+  autopayEligible,
+  paperlessEligible,
+  autopayEnrolled,
+  paperlessEnrolled,
   alert,
   className,
   theme: customTheme,
   currency,
   ...actions
-}) => {
+}: StickerSheetProps) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -389,10 +387,10 @@ export const StickerSheet: React.FC<StickerSheetProps> = ({
       {alert && <AlertMessage alert={alert} isMobile={isMobile} />}
       
       <BalanceInfo
-        currentBalance={currentBalance}
-        autopayDate={autopayDate}
-        lastPaymentAmount={lastPaymentAmount}
-        lastPaymentDate={lastPaymentDate}
+        currentBalanceAmt={currentBalanceAmt}
+        autopayScheduledDate={autopayScheduledDate}
+        lastPaymentAmt={lastPaymentAmt}
+        lastPaymentReceivedDate={lastPaymentReceivedDate}
         onBillDetailsClick={actions.onBillDetailsClick}
         isMobile={isMobile}
         currency={currency}
@@ -403,9 +401,11 @@ export const StickerSheet: React.FC<StickerSheetProps> = ({
       </DividerBox>
 
       <PaymentSettings
-        cardLastFour={cardLastFour}
-        autopaySettings={autopaySettings}
-        paperlessSettings={paperlessSettings}
+        cardNumber={cardNumber}
+        autopayEligible={autopayEligible}
+        paperlessEligible={paperlessEligible}
+        autopayEnrolled={autopayEnrolled}
+        paperlessEnrolled={paperlessEnrolled}
         {...actions}
       />
     </BaseCard>
