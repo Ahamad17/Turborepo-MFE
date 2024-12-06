@@ -1,8 +1,15 @@
-import { StickerSheet } from '@repo/ui';
+import { StickerSheet } from "@repo/ui";
 
 export default function Page() {
   return (
-    <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "flex-start",
+        gap: "16px",
+      }}
+    >
       <StickerSheet
         currentBalanceAmt={89.99}
         autopayScheduledDate="September 12, 2024"
@@ -54,7 +61,8 @@ export default function Page() {
         lastPaymentAmt={50.0}
         lastPaymentReceivedDate="September 12, 2024"
         cardNumber="5000"
-        cardType="discover" />
+        cardType="discover"
+      />
     </div>
   );
 }
