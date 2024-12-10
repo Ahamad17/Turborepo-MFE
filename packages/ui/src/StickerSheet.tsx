@@ -1,3 +1,5 @@
+'use client'
+
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -59,7 +61,8 @@ type StickerSheetBaseProps = {
   showMakeAPayment?: boolean,
   showMorePaymentOptions?: boolean,
   morePaymentOptionsCTA?: string,
-  showPaymentsOptions?: boolean
+  showPaymentsOptions?: boolean,
+  billDetailsText?: string;
 };
 
 /**
@@ -207,6 +210,7 @@ const BalanceInfo: React.FC<{
   onBillDetailsClick?: () => void;
   isMobile: boolean;
   currency: string;
+  billDetailsText: string;
 }> = ({
   currentBalanceAmt,
   autopayScheduledDate,
@@ -215,6 +219,7 @@ const BalanceInfo: React.FC<{
   onBillDetailsClick,
   isMobile,
   currency,
+  billDetailsText,
 }) => (
   <BalanceSection>
     <Typography variant="body2" color="textSecondary">
@@ -226,7 +231,7 @@ const BalanceInfo: React.FC<{
         {currency}{currentBalanceAmt.toFixed(2)}
       </Typography>
       <ActionLink onClick={onBillDetailsClick} ariaLabel="View bill details">
-        Bill details
+        {billDetailsText}
       </ActionLink>
     </Box>
 
@@ -421,6 +426,7 @@ export const StickerSheet = ({
   alertSuccessColor = "#E7F4F0",
   alertErrorColor = "#D23627",
   currency = "$",
+  billDetailsText = "Bill details",
   ...actions
 }: StickerSheetProps) => {
   const theme = useTheme();
@@ -438,6 +444,7 @@ export const StickerSheet = ({
         onBillDetailsClick={actions.onBillDetailsClick}
         isMobile={isMobile}
         currency={currency}
+        billDetailsText={billDetailsText} // Pass new prop
       />
 
       <DividerBox>
