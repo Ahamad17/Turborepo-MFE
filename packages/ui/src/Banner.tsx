@@ -1,8 +1,17 @@
 import { styled } from '@mui/material/styles';
-import { Box, Typography, Select, MenuItem, SelectChangeEvent, FormControl, InputLabel } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  FormControl,
+  InputLabel,
+  alpha
+} from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type Account = {
   id: string;
@@ -24,6 +33,7 @@ const BannerContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  
   [theme.breakpoints.down('md')]: {
     padding: theme.spacing(3, 2),
   },
@@ -36,9 +46,10 @@ const BannerContainer = styled(Box)(({ theme }) => ({
 }));
 
 const Greeting = styled(Typography)(({ theme }) => ({
-  color: '#FFFFFF',
+  color: theme.palette.common.white,
   fontSize: '24px',
   fontWeight: 500,
+  
   [theme.breakpoints.down('sm')]: {
     fontSize: '20px',
   },
@@ -47,6 +58,7 @@ const Greeting = styled(Typography)(({ theme }) => ({
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   minWidth: '240px',
   width: 'auto',
+  
   [theme.breakpoints.between('sm', 'md')]: {
     width: '280px',
   },
@@ -55,38 +67,44 @@ const StyledFormControl = styled(FormControl)(({ theme }) => ({
   },
 }));
 
-const StyledInputLabel = styled(InputLabel)({
-  color: 'rgba(255, 255, 255, 0.7)',
+const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
+  color: alpha(theme.palette.common.white, 0.7),
+  
   '&.Mui-focused': {
-    color: '#FFFFFF',
+    color: theme.palette.common.white,
   },
   '&.MuiInputLabel-shrink': {
-    color: '#FFFFFF',
+    color: theme.palette.common.white,
   },
-});
+}));
 
 const StyledSelect = styled(Select<string>)(({ theme }) => ({
-  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  color: '#FFFFFF',
+  backgroundColor: alpha(theme.palette.common.white, 0.1),
+  color: theme.palette.common.white,
+  
   '& .MuiSelect-select': {
     padding: theme.spacing(1.5, 4, 1.5, 2),
   },
+  
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: alpha(theme.palette.common.white, 0.3),
     legend: {
       '& span': {
-        color: '#FFFFFF',
+        color: theme.palette.common.white,
       },
     },
   },
+  
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'rgba(255, 255, 255, 0.5)',
+    borderColor: alpha(theme.palette.common.white, 0.5),
   },
+  
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: '#FFFFFF',
+    borderColor: theme.palette.common.white,
   },
+  
   '& .MuiSelect-icon': {
-    color: '#FFFFFF',
+    color: theme.palette.common.white,
   },
 }));
 
@@ -95,8 +113,9 @@ const AccountMenuItem = styled(MenuItem)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
+  
   '&.Mui-selected': {
-    backgroundColor: 'rgba(0, 70, 170, 0.08)',
+    backgroundColor: alpha(theme.palette.primary.main, 0.08),
   },
 }));
 
@@ -115,12 +134,12 @@ const AccountNumber = styled(Typography)({
   color: 'rgba(0, 0, 0, 0.6)',
 });
 
-export const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
+export const PersonalizedBanner = ({
   name,
   accounts,
   selectedAccount,
   onAccountChange,
-}) => {
+}: PersonalizedBannerProps) => {
   const [currentAccount, setCurrentAccount] = useState(selectedAccount);
 
   useEffect(() => {
@@ -128,7 +147,7 @@ export const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
   }, [selectedAccount]);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
-    const newValue = event.target.value as string;
+    const newValue = event.target.value;
     setCurrentAccount(newValue);
     onAccountChange?.(newValue);
   };
@@ -150,8 +169,8 @@ export const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
           renderValue={() => currentAccountDetails?.number || ''}
         >
           {accounts.map((account) => (
-            <AccountMenuItem 
-              key={account.id} 
+            <AccountMenuItem
+              key={account.id}
               value={account.id}
               selected={account.id === currentAccount}
             >
@@ -160,7 +179,7 @@ export const PersonalizedBanner: React.FC<PersonalizedBannerProps> = ({
                 <AccountNumber>{account.number}</AccountNumber>
               </AccountInfo>
               {account.id === currentAccount && (
-                <CheckIcon sx={{ ml: 2, color: '#0046AA' }} />
+                <CheckIcon sx={{ ml: 2, color: 'primary.main' }} />
               )}
             </AccountMenuItem>
           ))}
