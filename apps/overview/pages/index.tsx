@@ -1,3 +1,5 @@
+'use client'
+
 import { PersonalizedBanner, StickerSheet } from "@repo/ui";
 
 export default function Page() {
@@ -8,6 +10,35 @@ export default function Page() {
       number: '987654321'
     }
   ];
+
+  const handleBillDetailsClick = () => {
+    console.log('Bill details clicked');
+  };
+
+  const handleEditCardClick = () => {
+    console.log('Edit card clicked');
+  };
+
+  const handleEditAutopayClick = () => {
+    console.log('Edit autopay clicked');
+  };
+
+  const handleEditPaperlessClick = () => {
+    console.log('Edit paperless clicked');
+  };
+
+  const handleTermsClick = () => {
+    console.log('Terms clicked');
+  };
+
+  const handlePayBalanceClick = () => {
+    console.log('Pay balance clicked');
+  };
+
+  const handleMoreOptionsClick = () => {
+    console.log('More options clicked');
+  };
+
   return (
     <>
     <PersonalizedBanner
@@ -43,6 +74,17 @@ export default function Page() {
           showPaymentsOptions={true}
           alertType="success"
           alertMessage="Payment successful"
+          billDetailsText="Visa bill details"
+          onBillDetailsClick={handleBillDetailsClick}
+          onEditCardClick={handleEditCardClick}
+          onEditAutopayClick={handleEditAutopayClick}
+          onEditPaperlessClick={handleEditPaperlessClick}
+          onTermsClick={handleTermsClick}
+          onPayBalanceClick={handlePayBalanceClick}
+          onMoreOptionsClick={handleMoreOptionsClick}
+          cardLinkText="Edit card"
+          autopayLinkText="Enroll"
+          paperlessLinkText="Enroll"
         />
       </div>
       <div>
@@ -54,7 +96,17 @@ export default function Page() {
           lastPaymentReceivedDate="September 12, 2024"
           cardNumber="5000"
           cardType="discover"
-          billDetailsText="View charges"
+          billDetailsText="Discover bill details"
+          onBillDetailsClick={handleBillDetailsClick}
+          onEditCardClick={handleEditCardClick}
+          onEditAutopayClick={handleEditAutopayClick}
+          onEditPaperlessClick={handleEditPaperlessClick}
+          onTermsClick={handleTermsClick}
+          onPayBalanceClick={handlePayBalanceClick}
+          onMoreOptionsClick={handleMoreOptionsClick}
+          cardLinkText="Edit"
+          autopayLinkText="Edit"
+          paperlessLinkText="Edit"
         />
       </div>
       <div>
@@ -76,6 +128,17 @@ export default function Page() {
           showPaymentsOptions={true}
           alertType="error"
           alertMessage="Payment failed"
+          billDetailsText="MasterCard bill details"
+          onBillDetailsClick={handleBillDetailsClick}
+          onEditCardClick={handleEditCardClick}
+          onEditAutopayClick={handleEditAutopayClick}
+          onEditPaperlessClick={handleEditPaperlessClick}
+          onTermsClick={handleTermsClick}
+          onPayBalanceClick={handlePayBalanceClick}
+          onMoreOptionsClick={handleMoreOptionsClick}
+          cardLinkText="Edit"
+          autopayLinkText="Enroll"
+          paperlessLinkText="Edit"
         />
       </div>
       <div>
@@ -92,7 +155,17 @@ export default function Page() {
           autopayEnrolled={false}
           paperlessEnrolled={false}
           showPaymentsOptions={false}
-          billDetailsText="View charges"
+          billDetailsText="Amex bill details"
+          onBillDetailsClick={handleBillDetailsClick}
+          onEditCardClick={handleEditCardClick}
+          onEditAutopayClick={handleEditAutopayClick}
+          onEditPaperlessClick={handleEditPaperlessClick}
+          onTermsClick={handleTermsClick}
+          onPayBalanceClick={handlePayBalanceClick}
+          onMoreOptionsClick={handleMoreOptionsClick}
+          cardLinkText="Edit"
+          autopayLinkText="Edit"
+          paperlessLinkText="Enroll"
         />
       </div>
       <div>
@@ -115,6 +188,14 @@ export default function Page() {
           showPaymentsOptions={true}
           alertType="success"
           alertMessage="Payment successful"
+          billDetailsText="PayPal bill details"
+          onBillDetailsClick={handleBillDetailsClick}
+          onEditCardClick={handleEditCardClick}
+          onEditAutopayClick={handleEditAutopayClick}
+          onEditPaperlessClick={handleEditPaperlessClick}
+          onTermsClick={handleTermsClick}
+          onPayBalanceClick={handlePayBalanceClick}
+          onMoreOptionsClick={handleMoreOptionsClick}
         />
       </div>
       <div>
@@ -131,7 +212,14 @@ export default function Page() {
           autopayEnrolled={false}
           paperlessEnrolled={true}
           showPaymentsOptions={true}
-          billDetailsText="View charges"
+          billDetailsText="Bank account bill details"
+          onBillDetailsClick={handleBillDetailsClick}
+          onEditCardClick={handleEditCardClick}
+          onEditAutopayClick={handleEditAutopayClick}
+          onEditPaperlessClick={handleEditPaperlessClick}
+          onTermsClick={handleTermsClick}
+          onPayBalanceClick={handlePayBalanceClick}
+          onMoreOptionsClick={handleMoreOptionsClick}
         />
       </div>
     </div>

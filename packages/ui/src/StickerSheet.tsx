@@ -47,9 +47,9 @@ type StickerSheetBaseProps = {
   morePaymentOptionsCTA?: string,
   showPaymentsOptions?: boolean,
   billDetailsText?: string;
-  editCardText?: string;
-  editAutopayText?: string;
-  editPaperlessText?: string;
+  cardLinkText?: string;
+  autopayLinkText?: string;
+  paperlessLinkText?: string;
 };
 
 type StickerSheetActions = {
@@ -190,9 +190,9 @@ export const StickerSheet = ({
   alertErrorColor = "#D23627",
   currency = "$",
   billDetailsText = "Bill details",
-  editCardText = "Edit",
-  editAutopayText = "Edit",
-  editPaperlessText = "Edit",
+  cardLinkText = "Edit",
+  autopayLinkText = "Edit",
+  paperlessLinkText = "Edit",
   ...actions
 }: StickerSheetProps) => {
   const theme = useTheme();
@@ -241,7 +241,7 @@ export const StickerSheet = ({
             <Typography variant="body1">•••• •••• •••• {cardNumber}</Typography>
           </Box>
           <ActionLink onClick={actions.onEditCardClick} ariaLabel="Edit card details">
-            {editCardText}
+            {cardLinkText}
           </ActionLink>
         </Box>
         {autopayEligible && (
@@ -255,7 +255,7 @@ export const StickerSheet = ({
               <Typography variant="body1">Autopay</Typography>
             </Box>
             <ActionLink onClick={actions.onEditAutopayClick} ariaLabel="Edit autopay settings">
-              {editAutopayText}
+              {autopayLinkText}
             </ActionLink>
           </Box>
         )}
@@ -270,7 +270,7 @@ export const StickerSheet = ({
               <Typography variant="body1">Paperless</Typography>
             </Box>
             <ActionLink onClick={actions.onEditPaperlessClick} ariaLabel="Edit paperless settings">
-              {editPaperlessText}
+              {paperlessLinkText}
             </ActionLink>
           </Box>
         )}
