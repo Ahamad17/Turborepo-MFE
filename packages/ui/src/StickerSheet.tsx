@@ -17,26 +17,10 @@ import ErrorIcon from '@mui/icons-material/Error';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { FaCcVisa, FaCcMastercard, FaCcAmex, FaCcDiscover, FaPaypal, FaUniversity } from 'react-icons/fa';
 
-/**
- * Type for Alert.
- * - `success`: Represents a successful operation or message.
- * - `error`: Represents an error or failure state.
- */
 type AlertType = "success" | "error";
 
-/**
- * Supported card types.
- * - `visa`
- * - `mastercard`
- * - `amex`
- * - `discover`
- */
 type CardType = 'visa' | 'mastercard' | 'amex' | 'americanexpress' | 'discover' | 'paypal' | 'bank';
 
-/**
- * Base props for the StickerSheet component.
- * Includes payment-related data and configuration flags.
- */
 type StickerSheetBaseProps = {
   currentBalanceAmt: number;
   autopayScheduledDate: string;
@@ -63,11 +47,11 @@ type StickerSheetBaseProps = {
   morePaymentOptionsCTA?: string,
   showPaymentsOptions?: boolean,
   billDetailsText?: string;
+  editCardText?: string;
+  editAutopayText?: string;
+  editPaperlessText?: string;
 };
 
-/**
- * Action callbacks for interactive elements in the StickerSheet.
- */
 type StickerSheetActions = {
   onBillDetailsClick?: () => void;
   onEditCardClick?: () => void;
@@ -78,15 +62,8 @@ type StickerSheetActions = {
   onMoreOptionsClick?: () => void;
 };
 
-/**
- * Combined props for StickerSheet, merging base props and actions.
- */
 type StickerSheetProps = StickerSheetBaseProps & StickerSheetActions;
 
-/**
- * Styled base card for StickerSheet.
- * Applies theme-based styling and allows for custom theming via props.
- */
 const BaseCard = styled(Card)<{ customTheme: { borderRadius: number; maxWidth: number; backgroundColor: string } }>(({ theme, customTheme }) => ({
   width: "100%",
   maxWidth: customTheme?.maxWidth,
@@ -96,10 +73,6 @@ const BaseCard = styled(Card)<{ customTheme: { borderRadius: number; maxWidth: n
   margin: "0 auto",
 }));
 
-/**
- * Styled alert box with support for success and error types.
- * Allows customization of colors through theme props.
- */
 const Alert = styled(Box)<{ type: AlertType; customColors?: { success: string; error: string } }>(
   ({ theme, type, customColors }) => ({
     backgroundColor: type === "success" 
@@ -113,10 +86,6 @@ const Alert = styled(Box)<{ type: AlertType; customColors?: { success: string; e
   })
 );
 
-/**
- * Styled section for displaying balance information.
- * Adapts spacing for mobile viewports.
- */
 const BalanceSection = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   [theme.breakpoints.down("sm")]: {
@@ -124,9 +93,6 @@ const BalanceSection = styled(Box)(({ theme }) => ({
   },
 }));
 
-/**
- * Styled link for editing options and navigation.
- */
 const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: "none",
   fontSize: theme.typography.pxToRem(14),
@@ -145,9 +111,6 @@ const ActionLink: React.FC<{ onClick?: () => void; ariaLabel: string; children: 
   </StyledLink>
 );
 
-/**
- * Styled container for payment settings, such as autopay and paperless billing.
- */
 const PaySettings = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   display: "flex",
@@ -158,26 +121,17 @@ const PaySettings = styled(Box)(({ theme }) => ({
   },
 }));
 
-/**
- * Divider section for visual separation of balance and payment settings.
- */
 const DividerBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(3),
   paddingTop: 0,
   paddingBottom: 0,
 }));
 
-/**
- * Divider styling for use in StickerSheet.
- */
 const PaymentDivider = styled(Divider)(({ theme }) => ({
   height: 1,
   backgroundColor: theme.palette.divider,
 }));
 
-/**
- * Styled button for StickerSheet actions.
- */
 const ActionButton = styled(Button)(({ theme }) => ({
   width: "100%",
   padding: theme.spacing(1),
@@ -185,122 +139,6 @@ const ActionButton = styled(Button)(({ theme }) => ({
   textTransform: "none",
   boxShadow: "none",
 }));
-
-/**
- * AlertMessage Component.
- * Renders the alert box with an icon and message.
- */
-const AlertMessage: React.FC<{ alertType: AlertType; alertMessage: string; isMobile: boolean; alertSuccessColor: string; alertErrorColor: string }> = ({ alertType, alertMessage, isMobile, alertSuccessColor, alertErrorColor }) => (
-  alertType && alertMessage && <Alert type={alertType} customColors={{ success: alertSuccessColor, error: alertErrorColor }}>
-    {alertType === "success" && <CheckCircleIcon color="success" />}
-    {alertType === "error" && <ErrorIcon />}
-    <Typography variant={isMobile ? "body2" : "body1"}>{alertMessage}</Typography>
-  </Alert>
-);
-
-/**
- * BalanceInfo Component.
- * Displays the current balance, autopay date, and last payment information.
- */
-const BalanceInfo: React.FC<{
-  currentBalanceAmt: number;
-  autopayScheduledDate: string;
-  lastPaymentAmt: number;
-  lastPaymentReceivedDate: string;
-  onBillDetailsClick?: () => void;
-  isMobile: boolean;
-  currency: string;
-  billDetailsText: string;
-}> = ({
-  currentBalanceAmt,
-  autopayScheduledDate,
-  lastPaymentAmt,
-  lastPaymentReceivedDate,
-  onBillDetailsClick,
-  isMobile,
-  currency,
-  billDetailsText,
-}) => (
-  <BalanceSection>
-    <Typography variant="body2" color="textSecondary">
-      Current balance
-    </Typography>
-
-    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 0.5 }}>
-      <Typography variant={isMobile ? "h5" : "h3"}>
-        {currency}{currentBalanceAmt.toFixed(2)}
-      </Typography>
-      <ActionLink onClick={onBillDetailsClick} ariaLabel="View bill details">
-        {billDetailsText}
-      </ActionLink>
-    </Box>
-
-    <Typography variant="body2" sx={{ mb: 2.5, fontSize: 16 }}>
-      Autopay scheduled for {autopayScheduledDate}
-    </Typography>
-    <Typography variant="body2" color="textSecondary">
-      Last payment of {currency}{lastPaymentAmt.toFixed(2)} was received on {lastPaymentReceivedDate}
-    </Typography>
-  </BalanceSection>
-);
-
-/**
- * PaymentSettings Component.
- * Displays payment method, autopay, and paperless settings.
- */
-const PaymentSettings: React.FC<{
-  cardNumber: string;
-  cardType: CardType;
-  autopayEligible: boolean;
-  paperlessEligible: boolean;
-  autopayEnrolled: boolean;
-  paperlessEnrolled: boolean;
-  makeAPayementCTA: string
-  showMakeAPayment: boolean,
-  showMorePaymentOptions: boolean,
-  morePaymentOptionsCTA: string,
-  showPaymentsOptions: boolean
-  onEditCardClick?: () => void;
-  onEditAutopayClick?: () => void;
-  onEditPaperlessClick?: () => void;
-  onTermsClick?: () => void;
-  onPayBalanceClick?: () => void;
-  onMoreOptionsClick?: () => void;
-}> = ({
-  cardNumber,
-  autopayEligible,
-  paperlessEligible,
-  autopayEnrolled,
-  paperlessEnrolled,
-  makeAPayementCTA,
-  showMakeAPayment,
-  showMorePaymentOptions,
-  morePaymentOptionsCTA,
-  showPaymentsOptions,
-  cardType,
-  onEditCardClick,
-  onEditAutopayClick,
-  onEditPaperlessClick,
-  onTermsClick,
-  onPayBalanceClick,
-  onMoreOptionsClick,
-}) => (
-  <PaySettings>
-    <PaymentMethod cardType={cardType} lastFour={cardNumber} onEdit={onEditCardClick} />
-    {autopayEligible && <SettingRow label="Autopay" status={autopayEnrolled} onEdit={onEditAutopayClick} />}
-    {paperlessEligible && <SettingRow label="Paperless" status={paperlessEnrolled} onEdit={onEditPaperlessClick} />}
-    <TermsAndButtons
-      makeAPayementCTA={makeAPayementCTA}
-      showMakeAPayment={showMakeAPayment}
-      showMorePaymentOptions={showMorePaymentOptions}
-      morePaymentOptionsCTA={morePaymentOptionsCTA}
-      showPaymentsOptions={showPaymentsOptions} 
-      onTermsClick={onTermsClick}
-      onPayBalanceClick={onPayBalanceClick}
-      onMoreOptionsClick={onMoreOptionsClick}
-    />
-  </PaySettings>
-);
 
 const CardIcon: React.FC<{cardType: CardType, size: number}> = ({ cardType, size = 50 }) => {
   const getIcon = () => {
@@ -326,88 +164,13 @@ const CardIcon: React.FC<{cardType: CardType, size: number}> = ({ cardType, size
   return getIcon()
 };
 
-/**
- * PaymentMethod Component.
- * Displays the last four digits of the card and an edit link.
- */
-const PaymentMethod: React.FC<{ lastFour: string; cardType: CardType, onEdit?: () => void }> = ({ lastFour, cardType, onEdit }) => (
-  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      <CardIcon cardType={cardType} size={30} />
-      <Typography variant="body1">•••• •••• •••• {lastFour}</Typography>
-    </Box>
-    <ActionLink onClick={onEdit} ariaLabel="Edit card details">
-      Edit
-    </ActionLink>
-  </Box>
-);
-
-/**
- * SettingRow Component.
- * Displays a setting label and an edit link.
- */
-const SettingRow: React.FC<{ label: string; status: boolean; onEdit?: () => void }> = ({ label, status, onEdit }) => (
-  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-      {status ? (
-        <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
-      ) : (
-        <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
-      )}
-      <Typography variant="body1">{label}</Typography>
-    </Box>
-    <ActionLink onClick={onEdit} ariaLabel={`Edit ${label.toLowerCase()} settings`}>
-      Edit
-    </ActionLink>
-  </Box>
-);
-
-/**
- * TermsAndButtons Component.
- * Displays terms and conditions text and action buttons.
- */
-const TermsAndButtons: React.FC<{
-  makeAPayementCTA: string
-  showMakeAPayment: boolean,
-  showMorePaymentOptions: boolean,
-  morePaymentOptionsCTA: string,
-  showPaymentsOptions: boolean
-  onTermsClick?: () => void;
-  onPayBalanceClick?: () => void;
-  onMoreOptionsClick?: () => void;
-}> = ({ makeAPayementCTA,
-  showMakeAPayment,
-  showMorePaymentOptions,
-  morePaymentOptionsCTA,
-  showPaymentsOptions, onTermsClick, onPayBalanceClick, onMoreOptionsClick }) => (
-  showPaymentsOptions && <>
-    <Typography variant="body2" color="textSecondary">
-      By selecting Pay Balance Now, I agree to the Payment Authorization{" "}
-      <ActionLink onClick={onTermsClick} ariaLabel="View terms and conditions">
-        Terms & Conditions
-      </ActionLink>
-    </Typography>
-
-    { showMakeAPayment && <ActionButton variant="contained" color="primary" onClick={onPayBalanceClick} aria-label="Pay balance now">
-      {makeAPayementCTA}
-    </ActionButton> }
-
-    { showMorePaymentOptions && <ActionButton variant="outlined" onClick={onMoreOptionsClick} aria-label="View more payment options">
-      {morePaymentOptionsCTA}
-    </ActionButton> }
-  </>
-);
-
-/**
- * StickerSheet Component.
- * Main component that combines balance info, payment settings, and alerts.
- */
 export const StickerSheet = ({
   currentBalanceAmt,
   autopayScheduledDate,
   lastPaymentAmt,
   lastPaymentReceivedDate,
   cardNumber,
+  cardType,
   autopayEligible = false,
   paperlessEligible = false,
   autopayEnrolled = false,
@@ -427,6 +190,9 @@ export const StickerSheet = ({
   alertErrorColor = "#D23627",
   currency = "$",
   billDetailsText = "Bill details",
+  editCardText = "Edit",
+  editAutopayText = "Edit",
+  editPaperlessText = "Edit",
   ...actions
 }: StickerSheetProps) => {
   const theme = useTheme();
@@ -434,36 +200,103 @@ export const StickerSheet = ({
 
   return (
     <BaseCard className={className} customTheme={{ borderRadius, maxWidth, backgroundColor }}>
-      {alertType && alertMessage && <AlertMessage alertType={alertType} alertMessage={alertMessage} isMobile={isMobile} alertSuccessColor={alertSuccessColor} alertErrorColor={alertErrorColor} />}
+      {alertType && alertMessage && (
+        <Alert type={alertType} customColors={{ success: alertSuccessColor, error: alertErrorColor }}>
+          {alertType === "success" && <CheckCircleIcon color="success" />}
+          {alertType === "error" && <ErrorIcon />}
+          <Typography variant={isMobile ? "body2" : "body1"}>{alertMessage}</Typography>
+        </Alert>
+      )}
       
-      <BalanceInfo
-        currentBalanceAmt={currentBalanceAmt}
-        autopayScheduledDate={autopayScheduledDate}
-        lastPaymentAmt={lastPaymentAmt}
-        lastPaymentReceivedDate={lastPaymentReceivedDate}
-        onBillDetailsClick={actions.onBillDetailsClick}
-        isMobile={isMobile}
-        currency={currency}
-        billDetailsText={billDetailsText} // Pass new prop
-      />
+      <BalanceSection>
+        <Typography variant="body2" color="textSecondary">
+          Current balance
+        </Typography>
+
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 0.5 }}>
+          <Typography variant={isMobile ? "h5" : "h3"}>
+            {currency}{currentBalanceAmt.toFixed(2)}
+          </Typography>
+          <ActionLink onClick={actions.onBillDetailsClick} ariaLabel="View bill details">
+            {billDetailsText}
+          </ActionLink>
+        </Box>
+
+        <Typography variant="body2" sx={{ mb: 2.5, fontSize: 16 }}>
+          Autopay scheduled for {autopayScheduledDate}
+        </Typography>
+        <Typography variant="body2" color="textSecondary">
+          Last payment of {currency}{lastPaymentAmt.toFixed(2)} was received on {lastPaymentReceivedDate}
+        </Typography>
+      </BalanceSection>
 
       <DividerBox>
         <PaymentDivider />
       </DividerBox>
 
-      <PaymentSettings
-        makeAPayementCTA={makeAPayementCTA}
-        showMakeAPayment={showMakeAPayment}
-        showMorePaymentOptions={showMorePaymentOptions}
-        morePaymentOptionsCTA={morePaymentOptionsCTA}
-        showPaymentsOptions={showPaymentsOptions}
-        cardNumber={cardNumber}
-        autopayEligible={autopayEligible}
-        paperlessEligible={paperlessEligible}
-        autopayEnrolled={autopayEnrolled}
-        paperlessEnrolled={paperlessEnrolled}
-        {...actions}
-      />
+      <PaySettings>
+        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <CardIcon cardType={cardType} size={30} />
+            <Typography variant="body1">•••• •••• •••• {cardNumber}</Typography>
+          </Box>
+          <ActionLink onClick={actions.onEditCardClick} ariaLabel="Edit card details">
+            {editCardText}
+          </ActionLink>
+        </Box>
+        {autopayEligible && (
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {autopayEnrolled ? (
+                <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
+              ) : (
+                <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
+              )}
+              <Typography variant="body1">Autopay</Typography>
+            </Box>
+            <ActionLink onClick={actions.onEditAutopayClick} ariaLabel="Edit autopay settings">
+              {editAutopayText}
+            </ActionLink>
+          </Box>
+        )}
+        {paperlessEligible && (
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {paperlessEnrolled ? (
+                <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
+              ) : (
+                <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
+              )}
+              <Typography variant="body1">Paperless</Typography>
+            </Box>
+            <ActionLink onClick={actions.onEditPaperlessClick} ariaLabel="Edit paperless settings">
+              {editPaperlessText}
+            </ActionLink>
+          </Box>
+        )}
+        {showPaymentsOptions && (
+          <>
+            <Typography variant="body2" color="textSecondary">
+              By selecting Pay Balance Now, I agree to the Payment Authorization{" "}
+              <ActionLink onClick={actions.onTermsClick} ariaLabel="View terms and conditions">
+                Terms & Conditions
+              </ActionLink>
+            </Typography>
+
+            {showMakeAPayment && (
+              <ActionButton variant="contained" color="primary" onClick={actions.onPayBalanceClick} aria-label="Pay balance now">
+                {makeAPayementCTA}
+              </ActionButton>
+            )}
+
+            {showMorePaymentOptions && (
+              <ActionButton variant="outlined" onClick={actions.onMoreOptionsClick} aria-label="View more payment options">
+                {morePaymentOptionsCTA}
+              </ActionButton>
+            )}
+          </>
+        )}
+      </PaySettings>
     </BaseCard>
   );
 };
