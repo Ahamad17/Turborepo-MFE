@@ -1,0 +1,23 @@
+{
+  "personalizedBanner": {
+    "greeting": "Hello",
+    "selectedAccountLabel": "Selected account"
+  },
+  "stickerSheet": {
+    "currentBalance": "Current balance",
+    "billDetailsText": "Bill details",
+    "autopayScheduled": "Autopay scheduled for",
+    "lastPayment": "Last payment of",
+    "receivedOn": "was received on",
+    "cardNumber": "•••• •••• ••••",
+    "cardLinkText": "Edit",
+    "autopay": "Autopay",
+    "autopayLinkText": "Edit",
+    "paperless": "Paperless",
+    "paperlessLinkText": "Edit",
+    "paymentAuthorization": "By selecting Pay Balance Now, I agree to the Payment Authorization",
+    "termsConditions": "Terms & Conditions",
+    "makeAPayementCTA": "Pay Balance Now",
+    "morePaymentOptionsCTA": "More Payment Options"
+  }
+}
