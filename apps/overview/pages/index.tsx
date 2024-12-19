@@ -1,6 +1,7 @@
 'use client'
 
 import { PersonalizedBanner, StickerSheet } from "@repo/ui";
+import billingCardContent from '../CMS/stream/accountOverview.json';
 
 export default function Page() {
   const accounts = [
@@ -39,6 +40,8 @@ export default function Page() {
     console.log('More options clicked');
   };
 
+  const billingCard = billingCardContent[':items'].billingCard.elements;
+
   return (
     <>
     <PersonalizedBanner
@@ -67,14 +70,14 @@ export default function Page() {
           paperlessEligible={true}
           autopayEnrolled={true}
           paperlessEnrolled={false}
-          makeAPayementCTA="Make a payment"
+          makeAPayementCTA={billingCard.ctaPayBalNow}
           showMakeAPayment={true}
           showMorePaymentOptions={true}
-          morePaymentOptionsCTA="More payment options"
+          morePaymentOptionsCTA={billingCard.ctaMoreOpts}
           showPaymentsOptions={true}
           alertType="success"
           alertMessage="Payment successful"
-          billDetailsText="Visa bill details"
+          billDetailsText={billingCard.lnkBillDetails}
           onBillDetailsClick={handleBillDetailsClick}
           onEditCardClick={handleEditCardClick}
           onEditAutopayClick={handleEditAutopayClick}
@@ -82,149 +85,19 @@ export default function Page() {
           onTermsClick={handleTermsClick}
           onPayBalanceClick={handlePayBalanceClick}
           onMoreOptionsClick={handleMoreOptionsClick}
-          cardLinkText="Edit card"
-          autopayLinkText="Enroll"
-          paperlessLinkText="Enroll"
-        />
-      </div>
-      <div>
-        <h3>Discover Card</h3>
-        <StickerSheet
-          currentBalanceAmt={89.99}
-          autopayScheduledDate="September 12, 2024"
-          lastPaymentAmt={50.0}
-          lastPaymentReceivedDate="September 12, 2024"
-          cardNumber="5000"
-          cardType="discover"
-          billDetailsText="Discover bill details"
-          onBillDetailsClick={handleBillDetailsClick}
-          onEditCardClick={handleEditCardClick}
-          onEditAutopayClick={handleEditAutopayClick}
-          onEditPaperlessClick={handleEditPaperlessClick}
-          onTermsClick={handleTermsClick}
-          onPayBalanceClick={handlePayBalanceClick}
-          onMoreOptionsClick={handleMoreOptionsClick}
-          cardLinkText="Edit"
-          autopayLinkText="Edit"
-          paperlessLinkText="Edit"
-        />
-      </div>
-      <div>
-        <h3>MasterCard</h3>
-        <StickerSheet
-          currentBalanceAmt={150.75}
-          autopayScheduledDate="October 10, 2024"
-          lastPaymentAmt={75.0}
-          lastPaymentReceivedDate="October 10, 2024"
-          cardNumber="1234"
-          cardType="mastercard"
-          autopayEligible={true}
-          paperlessEligible={true}
-          autopayEnrolled={false}
-          paperlessEnrolled={true}
-          makeAPayementCTA="Pay Now"
-          showMakeAPayment={true}
-          showMorePaymentOptions={false}
-          showPaymentsOptions={true}
-          alertType="error"
-          alertMessage="Payment failed"
-          billDetailsText="MasterCard bill details"
-          onBillDetailsClick={handleBillDetailsClick}
-          onEditCardClick={handleEditCardClick}
-          onEditAutopayClick={handleEditAutopayClick}
-          onEditPaperlessClick={handleEditPaperlessClick}
-          onTermsClick={handleTermsClick}
-          onPayBalanceClick={handlePayBalanceClick}
-          onMoreOptionsClick={handleMoreOptionsClick}
-          cardLinkText="Edit"
-          autopayLinkText="Enroll"
-          paperlessLinkText="Edit"
-        />
-      </div>
-      <div>
-        <h3>Amex Card</h3>
-        <StickerSheet
-          currentBalanceAmt={200.00}
-          autopayScheduledDate="November 15, 2024"
-          lastPaymentAmt={100.0}
-          lastPaymentReceivedDate="November 15, 2024"
-          cardNumber="6789"
-          cardType="amex"
-          autopayEligible={false}
-          paperlessEligible={false}
-          autopayEnrolled={false}
-          paperlessEnrolled={false}
-          showPaymentsOptions={false}
-          billDetailsText="Amex bill details"
-          onBillDetailsClick={handleBillDetailsClick}
-          onEditCardClick={handleEditCardClick}
-          onEditAutopayClick={handleEditAutopayClick}
-          onEditPaperlessClick={handleEditPaperlessClick}
-          onTermsClick={handleTermsClick}
-          onPayBalanceClick={handlePayBalanceClick}
-          onMoreOptionsClick={handleMoreOptionsClick}
-          cardLinkText="Edit"
-          autopayLinkText="Edit"
-          paperlessLinkText="Enroll"
-        />
-      </div>
-      <div>
-        <h3>PayPal</h3>
-        <StickerSheet
-          currentBalanceAmt={300.50}
-          autopayScheduledDate="December 20, 2024"
-          lastPaymentAmt={150.0}
-          lastPaymentReceivedDate="December 20, 2024"
-          cardNumber="4321"
-          cardType="paypal"
-          autopayEligible={true}
-          paperlessEligible={true}
-          autopayEnrolled={true}
-          paperlessEnrolled={true}
-          makeAPayementCTA="Pay Now"
-          showMakeAPayment={true}
-          showMorePaymentOptions={true}
-          morePaymentOptionsCTA="More Options"
-          showPaymentsOptions={true}
-          alertType="success"
-          alertMessage="Payment successful"
-          billDetailsText="PayPal bill details"
-          onBillDetailsClick={handleBillDetailsClick}
-          onEditCardClick={handleEditCardClick}
-          onEditAutopayClick={handleEditAutopayClick}
-          onEditPaperlessClick={handleEditPaperlessClick}
-          onTermsClick={handleTermsClick}
-          onPayBalanceClick={handlePayBalanceClick}
-          onMoreOptionsClick={handleMoreOptionsClick}
-        />
-      </div>
-      <div>
-        <h3>Bank Account</h3>
-        <StickerSheet
-          currentBalanceAmt={450.75}
-          autopayScheduledDate="January 15, 2025"
-          lastPaymentAmt={200.0}
-          lastPaymentReceivedDate="January 15, 2025"
-          cardNumber="9876"
-          cardType="bank"
-          autopayEligible={false}
-          paperlessEligible={true}
-          autopayEnrolled={false}
-          paperlessEnrolled={true}
-          showPaymentsOptions={true}
-          billDetailsText="Bank account bill details"
-          onBillDetailsClick={handleBillDetailsClick}
-          onEditCardClick={handleEditCardClick}
-          onEditAutopayClick={handleEditAutopayClick}
-          onEditPaperlessClick={handleEditPaperlessClick}
-          onTermsClick={handleTermsClick}
-          onPayBalanceClick={handlePayBalanceClick}
-          onMoreOptionsClick={handleMoreOptionsClick}
+          cardLinkText={billingCard.lnkEdit}
+          autopayLinkText={billingCard.lnkEnroll}
+          paperlessLinkText={billingCard.lnkEnroll}
+          currentBalanceText={billingCard.tltCurrentBal}
+          autopayScheduledText={billingCard.txtAutopayScheduled}
+          lastPaymentText={billingCard.txtLastPayment}
+          autopayText={billingCard.txtAutopay}
+          paperlessText={billingCard.txtPaperless}
+          paymentAuthorizationText={billingCard.txtPaymentAuthorization}
+          termsConditionsText={billingCard.lnkTerms}
         />
       </div>
     </div>
     </>
-    
   );
-  
 }

@@ -1,0 +1,48 @@
+{
+    "title": "accountoverview",
+    "index": {},
+    ":items": {
+        "page": {
+            "title": "page",
+            "elements": {
+                "title": "Account Overview | DIRECTV"
+            }
+        },
+        "paymentAlerts": {
+            "tltSuspended": "Your account is suspended",
+            "txtSuspended": "Your account is past due. Pay was due on [[DATE]]. Make a payment or contact us"
+        },
+        "billingCard": {
+            "title": "billingCard",
+            "elements": {
+                "tltCurrentBal": "Currrent balance",
+                "tltPastDueBal": "Past Due Balance",
+                "lnkBillDetails": "Bill details",
+                "txtAutopayScheduled": "Autopay scheduled for [[DATE]]",
+                "txtLastPayment": "Last payment of [[AMOUNT]] was received on [[DATE]]",
+                "txtNoPaymentDue": "No payment due",
+                "txtNextPayment": "Next statement: [[DATE]]",
+                "lnkEdit": "Edit",
+                "lnkEnroll": "Enroll",
+                "txtAutopay": "Autopay",
+                "txtPaperless": "Paperless",
+                "txtPaymentAuthorization": "By selecting Pay Balance Now, I agree to the Payment Authorization ",
+                "lnkTerms": "Terms & Conditions",
+                "ctaPayBalNow": "Pay balance now",
+                "ctaMoreOpts": "More payment options"
+            }
+        },
+        "offerCard": {
+            "title": "offerCard",
+            "elements": {
+                "templateName": "Offercard_image_bottom_dark",
+                "imageUrl": "https://www.directv.com/dtvassets/corporate/timeline/B1-9_timeline_1x.png",
+                "txtEyebrow": "DIRECTV INSIDER",
+                "txtTitle": "DIRECTV Insider delivers the latest Streaming TV, Movies, Sports and Entertainment News.",
+                "ctaText": "Learn more",
+                "ctaLink": "https://www.directv.com/insider/",
+                "isCtaUrlInSameTab": "newTabURL"
+            }
+        }
+    }
+}

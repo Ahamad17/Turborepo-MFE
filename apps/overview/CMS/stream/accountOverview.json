@@ -1,0 +1,54 @@
+{
+    "title": "accountoverview",
+    "chnldata": {},
+    "index": {
+        "disableAuxNav": false,
+        "disableGNav": false,
+        "disableLinkFarm": false,
+        "disableSkinnyGNav": false,
+        "isV2GNav": false,
+        "isV2Footer": false,
+        "isV2LinkFarm": false,
+        "disableTFN": false,
+        "disableBusinessLink": false,
+        "helpCenterInfoLabel": "Call us: ",
+        "CustomerCareNum": "8553836121",
+        "CustomerCareNumLabel": "855.383.6121"
+    },
+    "gpcConfig": {
+        "gpc": {
+            "title": "gpc",
+            "elements": {
+                "gpc": {
+                    "enable": true,
+                    "expire": 7500,
+                    "message": "<b>Confirmed Preferenc Signal Recognition:</b> We've detected a signal from your browser settings that disables data sharing. We need additional information to manage your data privacy choices. <a style=\"text-decoration: none;\">Manage your privacy choices</a>"
+                }
+            }
+        }
+    },
+    ":items": {
+        "page": {
+            "title": "page",
+            "elements": {
+                "title": "Account Overview | DIRECTV"
+            }
+        },
+        "billingCard": {
+            "title": "billingCard",
+            "elements": {
+                "tltCurrentBal": "Currrent balance",
+                "lnkViewCharges": "View charges",
+                "txtAutopayScheduled": "Autopay scheduled for [[DATE]]",
+                "txtLastPayment": "Last payment of [[AMOUNT]] was received on [[DATE]]",
+                "lnkEdit": "Edit",
+                "accountSuspended": {
+                    "title": "Account Suspended",
+                    "txtPastDue": "Your account is past due. Pay was due on [[DATE]]. Please make a payment or contact us to resolve and keep your account current.",
+                    "ctaMakeAPayment": "Make a payment",
+                    "ctaDashboard": "Go to dashboard"
+                }
+            }
+        }
+    }
+}

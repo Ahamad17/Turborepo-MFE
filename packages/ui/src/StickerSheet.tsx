@@ -16,7 +16,6 @@ import CreditCardIcon from "@mui/icons-material/CreditCard";
 import ErrorIcon from '@mui/icons-material/Error';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { FaCcVisa, FaCcMastercard, FaCcAmex, FaCcDiscover, FaPaypal, FaUniversity } from 'react-icons/fa';
-import content from './content.json';
 
 type AlertType = "success" | "error";
 
@@ -42,15 +41,22 @@ type StickerSheetBaseProps = {
   alertSuccessColor?: string;
   alertErrorColor?: string;
   currency?: string;
-  makeAPayementCTA?: string
-  showMakeAPayment?: boolean,
-  showMorePaymentOptions?: boolean,
-  morePaymentOptionsCTA?: string,
-  showPaymentsOptions?: boolean,
+  makeAPayementCTA?: string;
+  showMakeAPayment?: boolean;
+  showMorePaymentOptions?: boolean;
+  morePaymentOptionsCTA?: string;
+  showPaymentsOptions?: boolean;
   billDetailsText?: string;
   cardLinkText?: string;
   autopayLinkText?: string;
   paperlessLinkText?: string;
+  currentBalanceText: string;
+  autopayScheduledText: string;
+  lastPaymentText: string;
+  autopayText: string;
+  paperlessText: string;
+  paymentAuthorizationText: string;
+  termsConditionsText: string;
 };
 
 type StickerSheetActions = {
@@ -165,6 +171,10 @@ const CardIcon: React.FC<{cardType: CardType, size: number}> = ({ cardType, size
   return getIcon()
 };
 
+const replacePlaceholders = (text: string, replacements: any) => {
+  return text.replace(/\[\[(.*?)\]\]/g, (_, key) => replacements[key] || '');
+};
+
 export const StickerSheet = ({
   currentBalanceAmt,
   autopayScheduledDate,
@@ -176,13 +186,13 @@ export const StickerSheet = ({
   paperlessEligible = false,
   autopayEnrolled = false,
   paperlessEnrolled = false,
-  makeAPayementCTA = content.stickerSheet.makeAPayementCTA,
+  makeAPayementCTA,
   showMakeAPayment = false,
   showMorePaymentOptions = false,
-  morePaymentOptionsCTA = content.stickerSheet.morePaymentOptionsCTA,
+  morePaymentOptionsCTA,
   showPaymentsOptions = false,
-  alertType = "success",
-  alertMessage = "",
+  alertType,
+  alertMessage,
   className = "",
   borderRadius = 3,
   maxWidth = 375,
@@ -190,10 +200,17 @@ export const StickerSheet = ({
   alertSuccessColor = "#E7F4F0",
   alertErrorColor = "#D23627",
   currency = "$",
-  billDetailsText = content.stickerSheet.billDetailsText,
-  cardLinkText = content.stickerSheet.cardLinkText,
-  autopayLinkText = content.stickerSheet.autopayLinkText,
-  paperlessLinkText = content.stickerSheet.paperlessLinkText,
+  billDetailsText,
+  cardLinkText,
+  autopayLinkText,
+  paperlessLinkText,
+  currentBalanceText,
+  autopayScheduledText,
+  lastPaymentText,
+  autopayText,
+  paperlessText,
+  paymentAuthorizationText,
+  termsConditionsText,
   ...actions
 }: StickerSheetProps) => {
   const theme = useTheme();
@@ -210,25 +227,33 @@ export const StickerSheet = ({
       )}
       
       <BalanceSection>
-        <Typography variant="body2" color="textSecondary">
-          {content.stickerSheet.currentBalance}
-        </Typography>
+        {currentBalanceText && (
+          <Typography variant="body2" color="textSecondary">
+            {currentBalanceText}
+          </Typography>
+        )}
 
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 0.5 }}>
           <Typography variant={isMobile ? "h5" : "h3"}>
             {currency}{currentBalanceAmt.toFixed(2)}
           </Typography>
-          <ActionLink onClick={actions.onBillDetailsClick} ariaLabel="View bill details">
-            {billDetailsText}
-          </ActionLink>
+          {billDetailsText && (
+            <ActionLink onClick={actions.onBillDetailsClick} ariaLabel={billDetailsText}>
+              {billDetailsText}
+            </ActionLink>
+          )}
         </Box>
 
-        <Typography variant="body2" sx={{ mb: 2.5, fontSize: 16 }}>
-          {content.stickerSheet.autopayScheduled} {autopayScheduledDate}
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-          {content.stickerSheet.lastPayment} {currency}{lastPaymentAmt.toFixed(2)} {content.stickerSheet.receivedOn} {lastPaymentReceivedDate}
-        </Typography>
+        {autopayScheduledText && (
+          <Typography variant="body2" sx={{ mb: 2.5, fontSize: 16 }}>
+            {replacePlaceholders(autopayScheduledText, { DATE: autopayScheduledDate })}
+          </Typography>
+        )}
+        {lastPaymentText && (
+          <Typography variant="body2" color="textSecondary">
+            {replacePlaceholders(lastPaymentText, { AMOUNT: `${currency}${lastPaymentAmt.toFixed(2)}`, DATE: lastPaymentReceivedDate })}
+          </Typography>
+        )}
       </BalanceSection>
 
       <DividerBox>
@@ -239,13 +264,15 @@ export const StickerSheet = ({
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <CardIcon cardType={cardType} size={30} />
-            <Typography variant="body1">{content.stickerSheet.cardNumber} {cardNumber}</Typography>
+            <Typography variant="body1">•••• •••• •••• {cardNumber}</Typography>
           </Box>
-          <ActionLink onClick={actions.onEditCardClick} ariaLabel="Edit card details">
-            {cardLinkText}
-          </ActionLink>
+          {cardLinkText && (
+            <ActionLink onClick={actions.onEditCardClick} ariaLabel={cardLinkText}>
+              {cardLinkText}
+            </ActionLink>
+          )}
         </Box>
-        {autopayEligible && (
+        {autopayEligible && autopayText && (
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               {autopayEnrolled ? (
@@ -253,14 +280,16 @@ export const StickerSheet = ({
               ) : (
                 <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
               )}
-              <Typography variant="body1">{content.stickerSheet.autopay}</Typography>
+              <Typography variant="body1">{autopayText}</Typography>
             </Box>
-            <ActionLink onClick={actions.onEditAutopayClick} ariaLabel="Edit autopay settings">
-              {autopayLinkText}
-            </ActionLink>
+            {autopayLinkText && (
+              <ActionLink onClick={actions.onEditAutopayClick} ariaLabel={autopayLinkText}>
+                {autopayLinkText}
+              </ActionLink>
+            )}
           </Box>
         )}
-        {paperlessEligible && (
+        {paperlessEligible && paperlessText && (
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               {paperlessEnrolled ? (
@@ -268,30 +297,36 @@ export const StickerSheet = ({
               ) : (
                 <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
               )}
-              <Typography variant="body1">{content.stickerSheet.paperless}</Typography>
+              <Typography variant="body1">{paperlessText}</Typography>
             </Box>
-            <ActionLink onClick={actions.onEditPaperlessClick} ariaLabel="Edit paperless settings">
-              {paperlessLinkText}
-            </ActionLink>
+            {paperlessLinkText && (
+              <ActionLink onClick={actions.onEditPaperlessClick} ariaLabel={paperlessLinkText}>
+                {paperlessLinkText}
+              </ActionLink>
+            )}
           </Box>
         )}
         {showPaymentsOptions && (
           <>
-            <Typography variant="body2" color="textSecondary">
-              {content.stickerSheet.paymentAuthorization}{" "}
-              <ActionLink onClick={actions.onTermsClick} ariaLabel="View terms and conditions">
-                {content.stickerSheet.termsConditions}
-              </ActionLink>
-            </Typography>
+            {paymentAuthorizationText && (
+              <Typography variant="body2" color="textSecondary">
+                {paymentAuthorizationText}{" "}
+                {termsConditionsText && (
+                  <ActionLink onClick={actions.onTermsClick} ariaLabel={termsConditionsText}>
+                    {termsConditionsText}
+                  </ActionLink>
+                )}
+              </Typography>
+            )}
 
-            {showMakeAPayment && (
-              <ActionButton variant="contained" color="primary" onClick={actions.onPayBalanceClick} aria-label="Pay balance now">
+            {showMakeAPayment && makeAPayementCTA && (
+              <ActionButton variant="contained" color="primary" onClick={actions.onPayBalanceClick} aria-label={makeAPayementCTA}>
                 {makeAPayementCTA}
               </ActionButton>
             )}
 
-            {showMorePaymentOptions && (
-              <ActionButton variant="outlined" onClick={actions.onMoreOptionsClick} aria-label="View more payment options">
+            {showMorePaymentOptions && morePaymentOptionsCTA && (
+              <ActionButton variant="outlined" onClick={actions.onMoreOptionsClick} aria-label={morePaymentOptionsCTA}>
                 {morePaymentOptionsCTA}
               </ActionButton>
             )}
