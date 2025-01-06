@@ -14,7 +14,6 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CheckIcon from '@mui/icons-material/Check';
 import { useState, useEffect } from 'react';
-import content from './content.json';
 
 type Account = {
   id: string;
@@ -171,19 +170,19 @@ export const PersonalizedBanner = ({
 
   return (
     <BannerContainer>
-      <Greeting variant="h1">{content.personalizedBanner.greeting}, {name}</Greeting>
+      <Greeting variant="h1">Hello, {name}</Greeting>
       {accounts.length === 1 ? (
         <AccountDisplay>{currentAccountDetails?.number}</AccountDisplay>
       ) : (
         <StyledFormControl>
-          <StyledInputLabel id="account-select-label">{content.personalizedBanner.selectedAccountLabel}</StyledInputLabel>
+          <StyledInputLabel id="account-select-label">Selected account</StyledInputLabel>
           <StyledSelect
             labelId="account-select-label"
             id="account-select"
             value={currentAccount || ''}
             onChange={handleChange}
             IconComponent={KeyboardArrowDownIcon}
-            label={content.personalizedBanner.selectedAccountLabel}
+            label="Selected account"
             renderValue={() => currentAccountDetails?.number || ''}
           >
             {accounts.map((account) => (

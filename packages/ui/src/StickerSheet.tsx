@@ -82,7 +82,7 @@ const BaseCard = styled(Card)<{ customTheme: { borderRadius: number; maxWidth: n
 
 const Alert = styled(Box)<{ type: AlertType; customColors?: { success: string; error: string } }>(
   ({ theme, type, customColors }) => ({
-    backgroundColor: type === "success" 
+    backgroundColor: type === "success"
       ? customColors?.success
       : customColors?.error,
     color: type === "success" ? "primary" : "#FFFFFF",
@@ -147,7 +147,7 @@ const ActionButton = styled(Button)(({ theme }) => ({
   boxShadow: "none",
 }));
 
-const CardIcon: React.FC<{cardType: CardType, size: number}> = ({ cardType, size = 50 }) => {
+const CardIcon: React.FC<{ cardType: CardType, size: number }> = ({ cardType, size = 50 }) => {
   const getIcon = () => {
     switch (cardType) {
       case 'visa':
@@ -225,31 +225,29 @@ export const StickerSheet = ({
           <Typography variant={isMobile ? "body2" : "body1"}>{alertMessage}</Typography>
         </Alert>
       )}
-      
+
       <BalanceSection>
-        {currentBalanceText && (
-          <Typography variant="body2" color="textSecondary">
-            {currentBalanceText}
-          </Typography>
-        )}
+        <Typography variant="body2" color="textSecondary">
+          {currentBalanceText}
+        </Typography>
 
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 0.5 }}>
-          <Typography variant={isMobile ? "h5" : "h3"}>
-            {currency}{currentBalanceAmt.toFixed(2)}
-          </Typography>
-          {billDetailsText && (
-            <ActionLink onClick={actions.onBillDetailsClick} ariaLabel={billDetailsText}>
-              {billDetailsText}
-            </ActionLink>
+          {currency && currentBalanceAmt != null && (
+            <Typography variant={isMobile ? "h5" : "h3"}>
+              {currency}{currentBalanceAmt.toFixed(2)}
+            </Typography>
           )}
+          <ActionLink onClick={actions.onBillDetailsClick} ariaLabel={billDetailsText as string}>
+            {billDetailsText}
+          </ActionLink>
         </Box>
 
-        {autopayScheduledText && (
+        {autopayScheduledDate && (
           <Typography variant="body2" sx={{ mb: 2.5, fontSize: 16 }}>
             {replacePlaceholders(autopayScheduledText, { DATE: autopayScheduledDate })}
           </Typography>
         )}
-        {lastPaymentText && (
+        {lastPaymentAmt != null && lastPaymentReceivedDate && (
           <Typography variant="body2" color="textSecondary">
             {replacePlaceholders(lastPaymentText, { AMOUNT: `${currency}${lastPaymentAmt.toFixed(2)}`, DATE: lastPaymentReceivedDate })}
           </Typography>
@@ -263,61 +261,60 @@ export const StickerSheet = ({
       <PaySettings>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <CardIcon cardType={cardType} size={30} />
-            <Typography variant="body1">•••• •••• •••• {cardNumber}</Typography>
+            {cardType && <CardIcon cardType={cardType} size={30} />}
+            {cardNumber && (
+              <Typography variant="body1">•••• •••• •••• {cardNumber}</Typography>
+            )}
           </Box>
-          {cardLinkText && (
-            <ActionLink onClick={actions.onEditCardClick} ariaLabel={cardLinkText}>
-              {cardLinkText}
-            </ActionLink>
-          )}
+          <ActionLink onClick={actions.onEditCardClick} ariaLabel={cardLinkText as string}>
+            {cardLinkText}
+          </ActionLink>
         </Box>
-        {autopayEligible && autopayText && (
+
+        {autopayEligible && (
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              {autopayEnrolled ? (
-                <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
-              ) : (
-                <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
+              {autopayEnrolled && (
+                autopayEnrolled ? (
+                  <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
+                ) : (
+                  <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
+                )
               )}
               <Typography variant="body1">{autopayText}</Typography>
             </Box>
-            {autopayLinkText && (
-              <ActionLink onClick={actions.onEditAutopayClick} ariaLabel={autopayLinkText}>
-                {autopayLinkText}
-              </ActionLink>
-            )}
+            <ActionLink onClick={actions.onEditAutopayClick} ariaLabel={autopayLinkText as string}>
+              {autopayLinkText}
+            </ActionLink>
           </Box>
         )}
-        {paperlessEligible && paperlessText && (
+
+        {paperlessEligible && (
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              {paperlessEnrolled ? (
-                <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
-              ) : (
-                <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
+              {paperlessEnrolled && (
+                paperlessEnrolled ? (
+                  <CheckCircleIcon color="success" sx={{ fontSize: 18 }} />
+                ) : (
+                  <CancelIcon color="error" sx={{ fontSize: 18, color: "grey.500" }} />
+                )
               )}
               <Typography variant="body1">{paperlessText}</Typography>
             </Box>
-            {paperlessLinkText && (
-              <ActionLink onClick={actions.onEditPaperlessClick} ariaLabel={paperlessLinkText}>
-                {paperlessLinkText}
-              </ActionLink>
-            )}
+            <ActionLink onClick={actions.onEditPaperlessClick} ariaLabel={paperlessLinkText as string}>
+              {paperlessLinkText}
+            </ActionLink>
           </Box>
         )}
+
         {showPaymentsOptions && (
           <>
-            {paymentAuthorizationText && (
-              <Typography variant="body2" color="textSecondary">
-                {paymentAuthorizationText}{" "}
-                {termsConditionsText && (
-                  <ActionLink onClick={actions.onTermsClick} ariaLabel={termsConditionsText}>
-                    {termsConditionsText}
-                  </ActionLink>
-                )}
-              </Typography>
-            )}
+            <Typography variant="body2" color="textSecondary">
+              {paymentAuthorizationText} {" "}
+              <ActionLink onClick={actions.onTermsClick} ariaLabel={termsConditionsText}>
+                {termsConditionsText}
+              </ActionLink>
+            </Typography>
 
             {showMakeAPayment && makeAPayementCTA && (
               <ActionButton variant="contained" color="primary" onClick={actions.onPayBalanceClick} aria-label={makeAPayementCTA}>

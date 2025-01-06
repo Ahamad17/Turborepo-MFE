@@ -1,7 +1,8 @@
 'use client'
 
-import { PersonalizedBanner, StickerSheet } from "@repo/ui";
+import { AppDrawer, PersonalizedBanner, StickerSheet } from "@repo/ui";
 import billingCardContent from '../CMS/stream/accountOverview.json';
+import { useState } from "react";
 
 export default function Page() {
   const accounts = [
@@ -17,6 +18,7 @@ export default function Page() {
   };
 
   const handleEditCardClick = () => {
+    setOpen(true);
     console.log('Edit card clicked');
   };
 
@@ -41,6 +43,9 @@ export default function Page() {
   };
 
   const billingCard = billingCardContent[':items'].billingCard.elements;
+
+  const [open, setOpen] = useState(false);
+  
 
   return (
     <>
@@ -70,21 +75,14 @@ export default function Page() {
           paperlessEligible={true}
           autopayEnrolled={true}
           paperlessEnrolled={false}
-          makeAPayementCTA={billingCard.ctaPayBalNow}
           showMakeAPayment={true}
           showMorePaymentOptions={true}
-          morePaymentOptionsCTA={billingCard.ctaMoreOpts}
           showPaymentsOptions={true}
           alertType="success"
           alertMessage="Payment successful"
+          makeAPayementCTA={billingCard.ctaPayBalNow}
+          morePaymentOptionsCTA={billingCard.ctaMoreOpts}
           billDetailsText={billingCard.lnkBillDetails}
-          onBillDetailsClick={handleBillDetailsClick}
-          onEditCardClick={handleEditCardClick}
-          onEditAutopayClick={handleEditAutopayClick}
-          onEditPaperlessClick={handleEditPaperlessClick}
-          onTermsClick={handleTermsClick}
-          onPayBalanceClick={handlePayBalanceClick}
-          onMoreOptionsClick={handleMoreOptionsClick}
           cardLinkText={billingCard.lnkEdit}
           autopayLinkText={billingCard.lnkEnroll}
           paperlessLinkText={billingCard.lnkEnroll}
@@ -95,9 +93,25 @@ export default function Page() {
           paperlessText={billingCard.txtPaperless}
           paymentAuthorizationText={billingCard.txtPaymentAuthorization}
           termsConditionsText={billingCard.lnkTerms}
+          onBillDetailsClick={handleBillDetailsClick}
+          onEditCardClick={handleEditCardClick}
+          onEditAutopayClick={handleEditAutopayClick}
+          onEditPaperlessClick={handleEditPaperlessClick}
+          onTermsClick={handleTermsClick}
+          onPayBalanceClick={handlePayBalanceClick}
+          onMoreOptionsClick={handleMoreOptionsClick}
         />
       </div>
     </div>
+
+    <AppDrawer
+      open={open}
+      onClose={() => setOpen(false)}
+      header={<h1>Header</h1>}
+      footer={<button >Footer Button</button>}
+    >
+      Content goes here
+    </AppDrawer>
     </>
   );
 }
