@@ -3,6 +3,8 @@
 import { AppDrawer, PersonalizedBanner, StickerSheet } from "@repo/ui";
 import billingCardContent from '../CMS/stream/accountOverview.json';
 import { useState } from "react";
+import PaymentMethodForm from "@/components/PaymentForm";
+import { Typography } from '@mui/material';
 
 export default function Page() {
   const accounts = [
@@ -107,10 +109,9 @@ export default function Page() {
     <AppDrawer
       open={open}
       onClose={() => setOpen(false)}
-      header={<h1>Header</h1>}
-      footer={<button >Footer Button</button>}
+      header={<Typography variant="h6">Manage Payment Method</Typography>}
     >
-      Content goes here
+      <PaymentMethodForm />
     </AppDrawer>
     </>
   );
