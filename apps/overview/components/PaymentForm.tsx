@@ -1,3 +1,4 @@
+'use client'
 import React, { useState } from 'react';
 import {
   Accordion,
@@ -18,6 +19,7 @@ import {
 } from '@mui/material';
 import SyncIcon from '@mui/icons-material/Sync';
 import AddIcon from '@mui/icons-material/Add';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 interface BaseDetails {
   autopayEnabled: boolean;
@@ -33,9 +35,11 @@ interface BankDetails extends BaseDetails {
 
 interface CardDetails extends BaseDetails {
   type: 'card';
+  cardholderName: string;
   cardNumber: string;
   expiryDate: string;
   cvv: string;
+  zipcode: string;
 }
 
 type PaymentDetails = BankDetails | CardDetails;
@@ -80,9 +84,11 @@ const PaymentMethodForm: React.FC = () => {
   });
   const [cardDetails, setCardDetails] = useState<CardDetails>({
     type: 'card',
+    cardholderName: '',
     cardNumber: '',
     expiryDate: '',
     cvv: '',
+    zipcode: '',
     autopayEnabled: false,
     autopayDate: '15th of every month',
     termsAccepted: false,
@@ -230,22 +236,39 @@ const PaymentMethodForm: React.FC = () => {
   const CardForm = () => (
     <form>
       <TextField
-        label="Card number"
+        label="Cardholder name"
+        variant="outlined"
+        required
+        value={cardDetails.cardholderName}
+        onChange={handleCardDetailsChange('cardholderName')}
+        sx={{ mb: 2, width: '100%' }}
+      />
+      <TextField
+        label="Credit card number"
         variant="outlined"
         required
         value={cardDetails.cardNumber}
         onChange={handleCardDetailsChange('cardNumber')}
+        InputProps={{
+          endAdornment: (
+            <VisibilityOffIcon sx={{ color: 'text.secondary', cursor: 'pointer' }} />
+          ),
+        }}
         sx={{ mb: 2, width: '100%' }}
       />
       <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
         <TextField
-          label="Expiry date"
+          label="Exp date"
           variant="outlined"
           required
           value={cardDetails.expiryDate}
           onChange={handleCardDetailsChange('expiryDate')}
           sx={{ flex: 1 }}
-        />
+          select
+        >
+          <MenuItem value="08/25">08/25</MenuItem>
+          <MenuItem value="09/25">09/25</MenuItem>
+        </TextField>
         <TextField
           label="CVV"
           variant="outlined"
@@ -255,6 +278,14 @@ const PaymentMethodForm: React.FC = () => {
           sx={{ flex: 1 }}
         />
       </Box>
+      <TextField
+        label="Zipcode"
+        variant="outlined"
+        required
+        value={cardDetails.zipcode}
+        onChange={handleCardDetailsChange('zipcode')}
+        sx={{ mb: 2, width: '100%' }}
+      />
 
       <AutopaySection 
         details={cardDetails}
@@ -289,6 +320,21 @@ const PaymentMethodForm: React.FC = () => {
       margin: '0 auto', 
       padding: 2 
     }}>
+      <Typography sx={{ mb: 2, color: 'text.secondary' }}>
+        You can edit your current payment method, or add a new one below.
+      </Typography>
+      
+      <Typography 
+        variant="subtitle1" 
+        sx={{ 
+          mb: 2, 
+          fontWeight: 500,
+          color: 'text.primary'
+        }}
+      >
+        Add a new payment method
+      </Typography>
+
       <StyledAccordion
         expanded={expanded === 'bank'}
         onChange={handleAccordionChange('bank')}

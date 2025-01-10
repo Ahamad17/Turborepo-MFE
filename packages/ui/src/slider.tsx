@@ -3,18 +3,18 @@
 import { Drawer, IconButton, Box } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
-type drawerSize = 'small' | 'medium' | 'large';
+type sliderSize = 'small' | 'medium' | 'large';
 
-const drawerWidths: Record<drawerSize, { mobile: number; desktop: number }> = {
+const sliderWidths: Record<sliderSize, { mobile: number; desktop: number }> = {
   small: { mobile: 280, desktop: 400 },
   medium: { mobile: 320, desktop: 480 },
   large: { mobile: 360, desktop: 560 }
 };
 
-type AppDrawerProps = {
+type SliderProps = {
   open: boolean;
   onClose: () => void;
-  size?: drawerSize;
+  size?: sliderSize;
   anchor?: 'left' | 'right';
   header?: React.ReactNode;
   footer?: React.ReactNode;
@@ -22,7 +22,7 @@ type AppDrawerProps = {
   onBeforeClose?: () => Promise<boolean> | boolean;
 }
 
-export const AppDrawer = ({
+export const Slider = ({
   open,
   onClose,
   size = 'large',
@@ -31,7 +31,7 @@ export const AppDrawer = ({
   footer,
   children,
   onBeforeClose
-}: AppDrawerProps) => {
+}: SliderProps) => {
   const handleClose = async () => {
     if (onBeforeClose) {
       const canClose = await onBeforeClose();
@@ -40,7 +40,7 @@ export const AppDrawer = ({
     onClose();
   };
 
-  const widths = drawerWidths[size];
+  const widths = sliderWidths[size];
 
   return (
     <Drawer

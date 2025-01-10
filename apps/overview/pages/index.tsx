@@ -1,12 +1,13 @@
 'use client'
 
-import { AppDrawer, PersonalizedBanner, StickerSheet } from "@repo/ui";
+import { PersonalizedBanner, StickerSheet } from "@repo/ui";
 import billingCardContent from '../CMS/stream/accountOverview.json';
-import { useState } from "react";
 import PaymentMethodForm from "@/components/PaymentForm";
+import { useSlider } from "@/AppSlider/useSlider";
 import { Typography } from '@mui/material';
 
 export default function Page() {
+  const { openSlider } = useSlider();
   const accounts = [
     {
       id: '1',
@@ -20,7 +21,7 @@ export default function Page() {
   };
 
   const handleEditCardClick = () => {
-    setOpen(true);
+    openSlider(<PaymentMethodForm />, {header: <Typography variant="h6">Manage Payment Method</Typography>})
     console.log('Edit card clicked');
   };
 
@@ -44,10 +45,7 @@ export default function Page() {
     console.log('More options clicked');
   };
 
-  const billingCard = billingCardContent[':items'].billingCard.elements;
-
-  const [open, setOpen] = useState(false);
-  
+  const billingCard = billingCardContent[':items'].billingCard.elements;  
 
   return (
     <>
@@ -105,14 +103,6 @@ export default function Page() {
         />
       </div>
     </div>
-
-    <AppDrawer
-      open={open}
-      onClose={() => setOpen(false)}
-      header={<Typography variant="h6">Manage Payment Method</Typography>}
-    >
-      <PaymentMethodForm />
-    </AppDrawer>
     </>
   );
 }
